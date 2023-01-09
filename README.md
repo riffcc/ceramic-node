@@ -100,7 +100,7 @@ yarn run graphql:example-queries
 ```
 > This script generates a Test WebsiteID, must be copied into **riff.cc-data-manager-poc/.env.local**
 
-> Note: These files are required for run composedb client and execute graphql queries. Once you've checked out the Riff.CC Ceramic Prototype, follow the instructions in that repository to copy them to it.
+> Note: The files `composites/Composite.graphql` and `composites/definitions.ts` are required for run composedb client and execute graphql queries. Once you've checked out the Riff.CC Ceramic Prototype, follow the instructions in that repository to copy them to it.
 
 Optionally you can run a GraphQL server with the GraphQL interface
 ```bash
