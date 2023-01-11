@@ -97,6 +97,7 @@ type Piece @createModel(accountRelation: LIST, description: "Piece of content") 
   category: String @string(maxLength: 100)
   approved: Boolean
   rejected: Boolean
+  rejectionReason: String @string(maxLength: 150)
   metadata: Metadata!
 }
 
