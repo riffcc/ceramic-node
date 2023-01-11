@@ -287,6 +287,7 @@ await compose.executeQuery(CREATE_PIECE, {
       websiteID: testUser1EthAccount.websiteID,
       name: "Eagle",
       cid: "bafkreifwanxptzn7jct56yl7q3h633ymn7bb2bjut6sxyulnas3skyg47e",
+      category: "Other",
       approved: true,
       metadata: {
         createdAt: (new Date).toISOString(),
@@ -303,6 +304,7 @@ await compose.executeQuery(CREATE_PIECE, {
       websiteID: testUser1EthAccount.websiteID,
       name: "ryan cat meme",
       cid: "bafkreiaakxh74mhjx2bflfv34rcpo27ynqbny3pg5nzrg6wjkw7qti2bmq",
+      category: "Other",
       approved: false,
       metadata: {
         createdAt: (new Date).toISOString(),
@@ -319,6 +321,7 @@ await compose.executeQuery(CREATE_PIECE, {
       websiteID: testUser1EthAccount.websiteID,
       name: "one doge coin",
       cid: "bafkreiemaqbrgqoj5gc3dkellc7gokyctm57dje36eogwgfgkjwncszaiy",
+      category: "Other",
       approved: false,
       metadata: {
         createdAt: (new Date).toISOString(),
@@ -336,6 +339,7 @@ await compose.executeQuery(CREATE_PIECE, {
       websiteID: testUser2EthAccount.websiteID,
       name: "The Dark Side Of The Moon - Pink Floyd",
       cid: "bafkreidybluf5b6o4mb345lnpgrpa5g3e2ztbndou4lj7y3crts4yqy53u",
+      category: "Music",
       approved: true,
       metadata: {
         createdAt: (new Date).toISOString(),
@@ -352,6 +356,7 @@ await compose.executeQuery(CREATE_PIECE, {
       websiteID: testUser2EthAccount.websiteID,
       name: "The King Of Limbs - Radiohead",
       cid: "bafkreibgighuh2i2ndn4vk4iustoveexry2nshjekgnebhfxvgkptu4yw4",
+      category: "Music",
       approved: true,
       metadata: {
         createdAt: (new Date).toISOString(),
@@ -368,6 +373,7 @@ await compose.executeQuery(CREATE_PIECE, {
       websiteID: testUser3EthAccount.websiteID,
       name: "Avatar (2009)",
       cid: "bafkreiff5rexqbzrcr4dmwh5vkbhpidkuauxwlqjvs4d4f3h62tplqqefu",
+      category: "Movies",
       approved: true,
       metadata: {
         createdAt: (new Date).toISOString(),
@@ -384,6 +390,7 @@ await compose.executeQuery(CREATE_PIECE, {
       websiteID: testUser3EthAccount.websiteID,
       name: "The Terminator (1984)",
       cid: "bafkreie5vk3pum2xseuvfzszjalzn54vxprhq4ftkvdpirllf4zvyc7uza",
+      category: "Movies",
       approved: true,
       metadata: {
         createdAt: (new Date).toISOString(),
@@ -400,6 +407,7 @@ await compose.executeQuery(CREATE_PIECE, {
       websiteID: testUser4EthAccount.websiteID,
       name: "Watch Dogs",
       cid: "bafkreibqq557b4syrfvl62vzx6e7rcjn62eq43azcqyvy6qps2yro2of3e",
+      category: "Games",
       approved: true,
       metadata: {
         createdAt: (new Date).toISOString(),
@@ -416,6 +424,7 @@ await compose.executeQuery(CREATE_PIECE, {
       websiteID: testUser4EthAccount.websiteID,
       name: "The Elder Scrolls V",
       cid: "bafkreib4wztoh7zwspcf7pe73saus7cb4tldibxamafpzzz5fgeojaj7ky",
+      category: "Games",
       approved: true,
       metadata: {
         createdAt: (new Date).toISOString(),
@@ -432,6 +441,7 @@ await compose.executeQuery(CREATE_PIECE, {
       websiteID: testUser5EthAccount.websiteID,
       name: "Harry Potter and The Philosopher's Stone",
       cid: "bafkreifhgqq24zmjg3rvx3nsrrkcxj6wjysupjn7hmii4bv5g365rrbh6u",
+      category: "Books",
       approved: true,
       metadata: {
         createdAt: (new Date).toISOString(),
@@ -448,6 +458,7 @@ await compose.executeQuery(CREATE_PIECE, {
       websiteID: testUser5EthAccount.websiteID,
       name: "The Diary of Anne Frank",
       cid: "bafkreiblehldyvprjvxncwj4guvk2iq2f7wuiutwu6bh7mumiyv7aef25e",
+      category: "Books",
       approved: true,
       metadata: {
         createdAt: (new Date).toISOString(),

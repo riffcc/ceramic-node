@@ -94,6 +94,7 @@ type Piece @createModel(accountRelation: LIST, description: "Piece of content") 
   owner: EthAccount @relationDocument(property: "ownerID")
   name: String @string(maxLength: 100)
   cid: String @string(maxLength: 100)
+  category: String @string(maxLength: 100)
   approved: Boolean
   rejected: Boolean
   metadata: Metadata!
