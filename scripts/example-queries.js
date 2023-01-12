@@ -270,6 +270,7 @@ await compose.executeQuery(CREATE_ADMIN, {
     content: {
       adminID: adminEthAccount.id,
       websiteID: adminEthAccount.websiteID,
+      super: true,
       metadata: {
         createdAt: (new Date).toISOString(),
         updatedAt: (new Date).toISOString()

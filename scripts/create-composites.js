@@ -128,6 +128,8 @@ type Admin @createModel(accountRelation: LIST, description: "Admin Website") {
   website: Website! @relationDocument(property: "websiteID")
 	adminID: StreamID! @documentReference(model: "EthAccount")
 	admin: EthAccount! @relationDocument(property: "adminID")
+  super: Boolean!
+  inactive: Boolean
   metadata: Metadata!
 }
 
