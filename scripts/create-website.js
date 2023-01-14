@@ -80,7 +80,7 @@ const readLineAsync = msg => {
 }
 console.log("Create a new website...")
 
-const websiteName = await readLineAsync("Name: ")
+const websiteName = await readLineAsync("Name (required): ")
 const description = await readLineAsync("Description: ")
 const image = await readLineAsync("Image IPFS CID: ")
 readline.close()
