@@ -90,10 +90,10 @@ Run the ceramic node (we suggest using something like `screen` to keep it runnin
 yarn run ceramic-node
 ```
 
-Indexing composites at node
+Index the composites on your node
 
 ```bash
-yarn run indexing:composites
+yarn run index:composites
 ```
 
 Fill out ADMIN_ETH_ADDRESS on .env file to create an website admin. Must be a valid Ethereum Address
