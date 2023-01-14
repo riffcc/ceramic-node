@@ -133,7 +133,7 @@ await compose.executeQuery(CREATE_ADMIN, {
   }
 })
 
-console.log(`${website.websiteName} ID: ${website.id}`)
+console.log(`${website.websiteName} SiteID: ${website.id}`)
 
 
 
