@@ -20,7 +20,7 @@ const did = new DID({
 })
 
 await did.authenticate()
-const ceramic = new CeramicClient(procces.env.NODE_URL)
+const ceramic = new CeramicClient(process.env.NODE_URL)
 ceramic.did = did
 
 // Index the models into ceramic node
