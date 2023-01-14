@@ -10,6 +10,7 @@ import { Ed25519Provider } from "key-did-provider-ed25519"
 import { definition } from "../composites/definitions.js"
 
 if (!process.env.PRIVATE_KEY) throw new Error("ENVIROMENT VAR PRIVATE_KEY UNDEFINED")
+if (!process.env.NODE_URL) throw new Error("ENVIROMENT VARIABLE NODE_URL UNDEFINED")
 if (!process.env.ADMIN_ETH_ADDRESS) throw new Error("ENVIROMENT VAR ADMIN_ETH_ADDRESS UNDEFINED")
 
 const privateKey = fromString(
@@ -22,7 +23,7 @@ const did = new DID({
 })
 
 await did.authenticate()
-const ceramic = new CeramicClient('http://localhost:7007')
+const ceramic = new CeramicClient(process.env.NODE_URL)
 ceramic.did = did
 
 const compose = new ComposeClient({

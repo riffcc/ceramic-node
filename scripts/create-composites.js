@@ -10,6 +10,7 @@ import { createComposite, writeEncodedCompositeRuntime, writeEncodedComposite, w
 
 if (!process.env.PRIVATE_KEY) throw new Error("ENVIROMENT VARIABLE PRIVATE KEY UNDEFINED")
 
+
 // Create DID controller for ceramic client
 const privateKey = fromString(
   process.env.PRIVATE_KEY,
@@ -21,7 +22,7 @@ const did = new DID({
 })
 
 await did.authenticate()
-const ceramic = new CeramicClient('http://localhost:7007')
+const ceramic = new CeramicClient('http://locahost:7007')
 ceramic.did = did
 
 console.log("Create composites from schemas...")
