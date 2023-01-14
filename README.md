@@ -3,10 +3,13 @@ Ceramic tooling for Riff.CC. Required for the Riff.CC Ceramic Prototype.
 
 ## Requirements 
 
-Install the hotfix version ceramic/cli
+Install the hotfix version ceramic/cli and composedb/cli
 
 ```bash
 yarn global add @ceramicnetwork/cli@hotfix
+```
+```bash
+yarn global add @composedb/cli@next
 ```
 
 ## Usage
@@ -26,6 +29,11 @@ yarn run generate:private-key
 Copy .env.example to .env and fill in PRIVATE_KEY
 ```bash
 PRIVATE_KEY=
+```
+
+Fill in the node url variable, if you run your own node it should be http://localhost:7007
+```bash
+NODE_URL=
 ```
 
 Run the Ceramic node for a few seconds and then stop it to generate a configuration file
@@ -82,10 +90,10 @@ Run the ceramic node (we suggest using something like `screen` to keep it runnin
 yarn run ceramic-node
 ```
 
-Generate graphql schemas and composites.
+Indexing composites at node
 
 ```bash
-yarn run generate:composites
+yarn run indexing:composites
 ```
 
 Fill out ADMIN_ETH_ADDRESS on .env file to create an website admin. Must be a valid Ethereum Address
@@ -93,14 +101,18 @@ Fill out ADMIN_ETH_ADDRESS on .env file to create an website admin. Must be a va
 ADMIN_ETH_ADDRESS=
 ```
 
-Execute graphql example queries.
+Create a new website
+
+```bash
+yarn run generate:website
+```
+
+For testing development you can execute graphql example queries.
 
 ```bash
 yarn run graphql:example-queries
 ```
 > This script generates a Test WebsiteID, must be copied into **riff.cc-data-manager-poc/.env.local**
-
-> Note: The files `composites/Composite.graphql` and `composites/definitions.ts` are required for run composedb client and execute graphql queries. Once you've checked out the Riff.CC Ceramic Prototype, follow the instructions in that repository to copy them to it.
 
 Optionally you can run a GraphQL server with the GraphQL interface
 ```bash
