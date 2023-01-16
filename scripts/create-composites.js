@@ -94,8 +94,9 @@ type Piece @createModel(accountRelation: LIST, description: "Piece of content") 
   ownerID: StreamID! @documentReference(model: "EthAccount")
   owner: EthAccount @relationDocument(property: "ownerID")
   name: String @string(maxLength: 100)
-  cid: String @string(maxLength: 100)
+  CID: String @string(maxLength: 100)
   category: String @string(maxLength: 100)
+  details: Details
   approved: Boolean
   rejected: Boolean
   rejectionReason: String @string(maxLength: 150)
@@ -105,6 +106,24 @@ type Piece @createModel(accountRelation: LIST, description: "Piece of content") 
 type Metadata {
   createdAt: String! @string(maxLength: 100)
   updatedAt: String! @string(maxLength: 100)
+}
+
+type Details {
+  imageThumbnailCID: String @string(maxLength: 100)
+  tags: String @string(maxLength: 100)
+  musicBrainzID: String @string(maxLength: 100)
+  artistNames: String @string(maxLength: 100)
+  albumTitle: String @string(maxLength: 100)
+  initialReleaseYear: String @string(maxLength: 100)
+  releaseType: String @string(maxLength: 100)
+  format: String @string(maxLength: 100)
+  bitrate: String @string(maxLength: 100)
+  media: String @string(maxLength: 100)
+  releaseDescription: String @string(maxLength: 100)
+  poster: String @string(maxLength: 100)
+  TMDBID: String @string(maxLength: 100)
+  IMDBID: String @string(maxLength: 100)
+  type: String @string(maxLength: 100)
 }
 `, function (err) {
   if (err) return console.log(err);
@@ -222,8 +241,8 @@ console.log("Writing config files...")
 // Write encoded composite json file, definitions and composite granephql schema
 await writeEncodedComposite(mergedComposite, './composites/merged-composite.json')
 await writeEncodedCompositeRuntime(
-  ceramic, 
-  './composites/merged-composite.json', 
+  ceramic,
+  './composites/merged-composite.json',
   './composites/definitions.ts'
 )
 await writeEncodedCompositeRuntime(
