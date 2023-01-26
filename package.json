@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "ceramic-node": "CERAMIC_ENABLE_EXPERIMENTAL_COMPOSE_DB='true' ceramic daemon",
-    "clean": "rm -rf composites schemas && mkdir composites schemas",
+    "clean:composites": "rm -rf composites schemas && mkdir composites schemas",
+    "clean:node-data": "rm -rf ~/.ceramic/indexing.sqlite && rm -rf ~/.ceramic/statestore",
     "generate:private-key": "composedb did:generate-private-key",
     "generate:did-key": "composedb did:from-private-key",
     "generate:composites": "npm run clean && node scripts/create-composites.js",
