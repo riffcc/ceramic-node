@@ -22,7 +22,7 @@ const did = new DID({
 })
 
 await did.authenticate()
-const ceramic = new CeramicClient('http://locahost:7007')
+const ceramic = new CeramicClient('http://localhost:7007')
 ceramic.did = did
 
 console.log("Create composites from schemas...")
@@ -177,6 +177,7 @@ type Subscription @createModel(accountRelation: LIST, description: "Subcription 
   website: Website! @relationDocument(property: "websiteID")
 	subscribedID: StreamID! @documentReference(model: "Website")
 	subscribedWebsite: Website! @relationDocument(property: "subscribedID")
+	inactive: Boolean
   metadata: Metadata!
 }
 
