@@ -7,7 +7,7 @@
     "clean:node-data": "rm -rf ~/.ceramic/indexing.sqlite && rm -rf ~/.ceramic/statestore",
     "generate:private-key": "composedb did:generate-private-key",
     "generate:did-key": "composedb did:from-private-key",
-    "generate:composites": "npm run clean && node scripts/create-composites.js",
+    "generate:composites": "npm run clean:composites && node scripts/create-composites.js",
     "index:composites": "node scripts/index-composites.js",
     "generate:website": "node scripts/create-website.js",
     "graphql:server": "node scripts/run-graphql-server.js",
