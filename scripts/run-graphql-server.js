@@ -1,24 +1,11 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
-import { DID } from 'dids'
-import { getResolver } from 'key-did-resolver';
-import { fromString } from 'uint8arrays/from-string'
-import { Ed25519Provider } from 'key-did-provider-ed25519'
 import { serveEncodedDefinition } from '@composedb/devtools-node'
+import createDID from '../utils/createDID.js';
 
-if (!process.env.PRIVATE_KEY) throw new Error("ENVIROMENT VAR PRIVATE_KEY UNDEFINED")
 if (!process.env.NODE_URL) throw new Error("ENVIROMENT VARIABLE NODE_URL UNDEFINED")
 
-const privateKey = fromString(
-  process.env.PRIVATE_KEY,
-  'base16'
-)
-const did = new DID({
-  resolver: getResolver(),
-  provider: new Ed25519Provider(privateKey),
-})
-
-await did.authenticate()
+const did = createDID()
 
 const server = await serveEncodedDefinition({
   ceramicURL: process.env.NODE_URL,

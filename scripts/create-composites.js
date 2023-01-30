@@ -1,29 +1,13 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 import fs from "fs"
-import { DID } from "dids"
-import { fromString } from "uint8arrays"
-import { getResolver } from "key-did-resolver"
-import { CeramicClient } from '@ceramicnetwork/http-client'
-import { Ed25519Provider } from "key-did-provider-ed25519"
 import { createComposite, writeEncodedCompositeRuntime, writeEncodedComposite, writeGraphQLSchema } from '@composedb/devtools-node'
+import createDID from '../utils/createDID.js'
+import createCeramicClient from '../utils/createCeramicClient.js'
 
-if (!process.env.PRIVATE_KEY) throw new Error("ENVIROMENT VARIABLE PRIVATE KEY UNDEFINED")
-
-
-// Create DID controller for ceramic client
-const privateKey = fromString(
-  process.env.PRIVATE_KEY,
-  'base16'
-)
-const did = new DID({
-  resolver: getResolver(),
-  provider: new Ed25519Provider(privateKey),
-})
-
-await did.authenticate()
-const ceramic = new CeramicClient('http://localhost:7007')
-ceramic.did = did
+if (!process.env.ADMIN_ETH_ADDRESS) throw new Error("ENVIROMENT VAR ADMIN_ETH_ADDRESS UNDEFINED")
+const did = await createDID()
+const ceramic = createCeramicClient(did)
 
 console.log("Create composites from schemas...")
 
@@ -43,12 +27,8 @@ type Metadata {
   if (err) return console.log(err);
   console.log('Website schema created!');
 })
-
-await new Promise((resolve) => setTimeout(() => resolve(), 2000))
-
-// Create Website composite from graphql schema
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
 const websiteComposite = await createComposite(ceramic, './schemas/Website.graphql')
-// Get model stream ID required to create others composites
 const websiteModelID = websiteComposite.modelIDs[0]
 
 // Create EthAccount graphql schema
@@ -71,13 +51,27 @@ type Metadata {
   if (err) return console.log(err);
   console.log('EthAccount schema created!');
 })
-
-await new Promise((resolve) => setTimeout(() => resolve(), 2000))
-
-// Create EthAccount composite from graphql schema
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
 const ethAccountComposite = await createComposite(ceramic, './schemas/EthAccount.graphql')
-// Get model stream ID required to create others composites
 const ethAccountModelID = ethAccountComposite.modelIDs[1]
+
+// Create Category graphql schema
+fs.writeFile('./schemas/Category.graphql', `type Website @loadModel(id: "${websiteModelID}") {
+  id: ID!
+}
+
+type Category @createModel(accountRelation: LIST, description: "A category") {
+  websiteID: StreamID! @documentReference(model: "Website")
+  website: Website @relationDocument(property: "websiteID")
+  name: String! @string(maxLength:100)
+}
+`, function (err) {
+  if (err) return console.log(err);
+  console.log('Category schema created!');
+})
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
+const categoryComposite = await createComposite(ceramic, './schemas/Category.graphql')
+const categoryModelID = categoryComposite.modelIDs[1]
 
 // Create Piece graphql schema
 fs.writeFile('./schemas/Piece.graphql', `type Website @loadModel(id: "${websiteModelID}") {
@@ -88,6 +82,10 @@ type EthAccount @loadModel(id: "${ethAccountModelID}") {
   id: ID!
 }
 
+type Category @loadModel(id: "${categoryModelID}") {
+  id: ID!
+}
+
 type Piece @createModel(accountRelation: LIST, description: "Piece of content") {
   websiteID: StreamID! @documentReference(model: "Website")
   website: Website @relationDocument(property: "websiteID")
@@ -95,7 +93,8 @@ type Piece @createModel(accountRelation: LIST, description: "Piece of content") 
   owner: EthAccount @relationDocument(property: "ownerID")
   name: String @string(maxLength: 100)
   CID: String @string(maxLength: 100)
-  category: String @string(maxLength: 100)
+  categoryID: StreamID! @documentReference(model: "Category")
+  category: Category @relationDocument(property: "categoryID")
   details: Details
   approved: Boolean
   rejected: Boolean
@@ -129,12 +128,128 @@ type Details {
   if (err) return console.log(err);
   console.log('Piece schema created!');
 })
-
-await new Promise((resolve) => setTimeout(() => resolve(), 2000))
-// Create Piece composite from graphql schema
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
 const pieceComposite = await createComposite(ceramic, './schemas/Piece.graphql')
-const pieceModelID = pieceComposite.modelIDs[2]
+const pieceModelID = pieceComposite.modelIDs[3]
 
+// Create FeaturedPiece graphql schema
+fs.writeFile('./schemas/Featured.graphql', `type Website @loadModel(id: "${websiteModelID}") {
+  id: ID!
+}
+
+type Piece @loadModel(id: "${pieceModelID}") {
+  id: ID!
+}
+
+type Featured @createModel(accountRelation: LIST, description: "A featured content") {
+  websiteID: StreamID! @documentReference(model: "Website")
+  website: Website! @relationDocument(property: "websiteID")
+	pieceID: StreamID! @documentReference(model: "Piece")
+	piece: Piece! @relationDocument(property: "pieceID")
+  startAt: String! @string(maxLength:100)
+  endAt: String! @string(maxLength:100)
+}
+
+type Metadata {
+  createdAt: String! @string(maxLength:100)
+  updatedAt: String! @string(maxLength:100)
+}
+`, function (err) {
+  if (err) return console.log(err);
+  console.log('Featured schema created!');
+})
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
+const featuredComposite = await createComposite(ceramic, './schemas/Featured.graphql')
+const featuredModelID = featuredComposite.modelIDs[2]
+
+// Create PieceLike graphql schema
+fs.writeFile('./schemas/PieceLike.graphql', `type Piece @loadModel(id: "${pieceModelID}") {
+  id: ID!
+}
+
+type EthAccount @loadModel(id: "${ethAccountModelID}") {
+  id: ID!
+}
+
+type PieceLike @createModel(accountRelation: LIST, description: "A like for a piece") {
+	pieceID: StreamID! @documentReference(model: "Piece")
+	piece: Piece! @relationDocument(property: "pieceID")
+  ownerID: StreamID! @documentReference(model: "EthAccount")
+  owner: EthAccount! @relationDocument(property: "ownerID")
+}
+`, function (err) {
+  if (err) return console.log(err);
+  console.log('PieceLike schema created!');
+})
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
+const pieceLikeComposite = await createComposite(ceramic, './schemas/PieceLike.graphql')
+const pieceLikeModelID = pieceLikeComposite.modelIDs[2]
+
+// Create PieceDislike graphql schema
+fs.writeFile('./schemas/PieceDislike.graphql', `type Piece @loadModel(id: "${pieceModelID}") {
+  id: ID!
+}
+
+type EthAccount @loadModel(id: "${ethAccountModelID}") {
+  id: ID!
+}
+
+type PieceDislike @createModel(accountRelation: LIST, description: "A like for a piece") {
+	pieceID: StreamID! @documentReference(model: "Piece")
+	piece: Piece! @relationDocument(property: "pieceID")
+  ownerID: StreamID! @documentReference(model: "EthAccount")
+  owner: EthAccount! @relationDocument(property: "ownerID")
+}
+`, function (err) {
+  if (err) return console.log(err);
+  console.log('PieceDislike schema created!');
+})
+const pieceDislikeComposite = await createComposite(ceramic, './schemas/PieceDislike.graphql')
+const pieceDislikeModelID = pieceDislikeComposite.modelIDs[2]
+
+// Create CategoryLike graphql schema
+fs.writeFile('./schemas/CategoryLike.graphql', `type Category @loadModel(id: "${categoryModelID}") {
+  id: ID!
+}
+
+type EthAccount @loadModel(id: "${ethAccountModelID}") {
+  id: ID!
+}
+
+type CategoryLike @createModel(accountRelation: LIST, description: "A like for a category") {
+	categoryID: StreamID! @documentReference(model: "Category")
+	category: Category! @relationDocument(property: "categoryID")
+}
+`, function (err) {
+  if (err) return console.log(err);
+  console.log('CategoryLike schema created!');
+})
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
+const categoryLikeComposite = await createComposite(ceramic, './schemas/CategoryLike.graphql')
+const categoryLikeModelID = categoryLikeComposite.modelIDs[2]
+
+// Create CategoryDislike graphql schema
+fs.writeFile('./schemas/CategoryDislike.graphql', `type Category @loadModel(id: "${categoryModelID}") {
+  id: ID!
+}
+
+type EthAccount @loadModel(id: "${ethAccountModelID}") {
+  id: ID!
+}
+
+type CategoryDislike @createModel(accountRelation: LIST, description: "A dislike for a category") {
+	categoryID: StreamID! @documentReference(model: "Category")
+	category: Category! @relationDocument(property: "categoryID")
+}
+`, function (err) {
+  if (err) return console.log(err);
+  console.log('CategoryDislike schema created!');
+})
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
+const categoryDislikeComposite = await createComposite(ceramic, './schemas/CategoryDislike.graphql')
+const categoryDislikeModelID = categoryDislikeComposite.modelIDs[2]
+
+// Create Admin graphql schema
 fs.writeFile('./schemas/Admin.graphql', `type Website @loadModel(id: "${websiteModelID}") {
   id: ID!
 }
@@ -161,13 +276,11 @@ type Metadata {
   if (err) return console.log(err);
   console.log('Admin schema created!');
 })
-
-await new Promise((resolve) => setTimeout(() => resolve(), 2000))
-// Create Subscription composite from graphql schema
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
 const adminComposite = await createComposite(ceramic, './schemas/Admin.graphql')
-const adminCompositeModelID = adminComposite.modelIDs[2]
+const adminModelID = adminComposite.modelIDs[2]
 
-
+// Create Subscription graphql schema
 fs.writeFile('./schemas/Subscription.graphql', `type Website @loadModel(id: "${websiteModelID}") {
   id: ID!
 }
@@ -189,22 +302,52 @@ type Metadata {
   if (err) return console.log(err);
   console.log('Subscription schema created!');
 })
-
-await new Promise((resolve) => setTimeout(() => resolve(), 2000))
-// Create Subscription composite from graphql schema
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
 const subscriptionComposite = await createComposite(ceramic, './schemas/Subscription.graphql')
 const subscriptionModelID = subscriptionComposite.modelIDs[1]
 
 // Create FinalModel graphql schema
-fs.writeFile('./schemas/FinalModel.graphql', `type Piece @loadModel(id: "${pieceModelID}") {
+fs.writeFile('./schemas/FinalModel.graphql', `type Admin @loadModel(id: "${adminModelID}") {
   id: ID!
+}
+
+type PieceLike @loadModel(id: "${pieceLikeModelID}") {
+  id: ID!
+}
+
+type PieceDislike @loadModel(id: "${pieceDislikeModelID}") {
+  id: ID!
+}
+
+type Piece @loadModel(id: "${pieceModelID}") {
+  likes: [PieceLike] @relationFrom(model: "PieceLike", property: "pieceID")
+  likesCount: Int! @relationCountFrom(model: "PieceLike", property: "pieceID")
+  dislikes: [PieceDislike] @relationFrom(model: "PieceDislike", property: "pieceID")
+  dislikesCount: Int! @relationCountFrom(model: "PieceDislike", property: "pieceID")
+}
+
+type CategoryLike @loadModel(id: "${categoryLikeModelID}") {
+  id: ID!
+}
+
+type CategoryDislike @loadModel(id: "${categoryDislikeModelID}") {
+  id: ID!
+}
+
+type Category @loadModel(id: "${categoryModelID}") {
+  pieces: [Piece] @relationFrom(model: "Piece", property: "categoryID")
+  piecesCount: Int! @relationCountFrom(model: "Piece", property: "categoryID")
+  likes: [CategoryLike] @relationFrom(model: "CategoryLike", property: "categoryID")
+  likesCount: Int! @relationCountFrom(model: "CategoryLike", property: "categoryID")
+  dislikes: [CategoryDislike] @relationFrom(model: "CategoryDislike", property: "categoryID")
+  dislikesCount: Int! @relationCountFrom(model: "CategoryDislike", property: "categoryID")
 }
 
 type Subscription @loadModel(id: "${subscriptionModelID}") {
   id: ID!
 }
 
-type Admin @loadModel(id: "${adminCompositeModelID}") {
+type Featured @loadModel(id: "${featuredModelID}") {
   id: ID!
 }
 
@@ -213,11 +356,19 @@ type EthAccount @loadModel(id: "${ethAccountModelID}") {
   piecesCount: Int! @relationCountFrom(model: "Piece", property: "ownerID")
   managedWebsites: [Admin] @relationFrom(model: "Admin", property: "adminID")
   managedWebsitesCount: Int! @relationCountFrom(model: "Admin", property: "adminID")
+  pieceLikes: [PieceLike] @relationFrom(model: "PieceLike", property: "ownerID")
+  pieceLikesCount: Int! @relationCountFrom(model: "PieceLike", property: "ownerID")
+  pieceDislikes: [PieceDislike] @relationFrom(model: "PieceDislike", property: "ownerID")
+  pieceDislikesCount: Int! @relationCountFrom(model: "PieceDislike", property: "ownerID")
 }
 
 type Website @loadModel(id: "${websiteModelID}") {
+  categories: [Category] @relationFrom(model: "Category", property: "websiteID")
+  categoriesCount: Int! @relationCountFrom(model: "Category", property: "websiteID")
   pieces: [Piece] @relationFrom(model: "Piece", property: "websiteID")
   piecesCount: Int! @relationCountFrom(model: "Piece", property: "websiteID")
+  featured: [Featured] @relationFrom(model: "Featured", property: "websiteID")
+  featuredCount: Int! @relationCountFrom(model: "Featured", property: "websiteID")
   subscriptions: [Subscription] @relationFrom(model: "Subscription", property: "websiteID")
   subscriptionsCount: Int! @relationCountFrom(model: "Subscription", property: "websiteID")
   admins: [Admin] @relationFrom(model: "Admin", property: "websiteID")
@@ -229,9 +380,7 @@ type Website @loadModel(id: "${websiteModelID}") {
   if (err) return console.log(err);
   console.log('FinalModel schema created!');
 })
-
-await new Promise((resolve) => setTimeout(() => resolve(), 2000))
-// Create FinalModel composite from graphql schema. Merge all composites
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
 const mergedComposite = await createComposite(ceramic, './schemas/FinalModel.graphql')
 
 // Index the models into ceramic node
@@ -241,6 +390,8 @@ await mergedComposite.startIndexingOn(ceramic)
 console.log("Writing config files...")
 // Write encoded composite json file, definitions and composite granephql schema
 await writeEncodedComposite(mergedComposite, './composites/merged-composite.json')
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
+
 await writeEncodedCompositeRuntime(
   ceramic,
   './composites/merged-composite.json',

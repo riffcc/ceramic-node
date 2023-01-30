@@ -1,70 +1,16 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 import { createInterface } from "readline";
+import {
+  CREATE_ETH_ACCOUNT,
+  CREATE_WEBSITE,
+  CREATE_ADMIN,
+  CREATE_CATEGORY,
+  pieceCategories
+} from '../utils/constants.js'
+import createComposeClient from '../utils/createComposeClient.js';
 
-import { DID } from "dids"
-import { fromString } from "uint8arrays"
-import { getResolver } from "key-did-resolver"
-import { CeramicClient } from '@ceramicnetwork/http-client'
-import { ComposeClient } from '@composedb/client'
-import { Ed25519Provider } from "key-did-provider-ed25519"
-import { definition } from "../composites/definitions.js"
-
-if (!process.env.PRIVATE_KEY) throw new Error("ENVIROMENT VAR PRIVATE_KEY UNDEFINED")
-if (!process.env.NODE_URL) throw new Error("ENVIROMENT VARIABLE NODE_URL UNDEFINED")
-if (!process.env.ADMIN_ETH_ADDRESS) throw new Error("ENVIROMENT VAR ADMIN_ETH_ADDRESS UNDEFINED")
-
-const privateKey = fromString(
-  process.env.PRIVATE_KEY,
-  'base16'
-)
-const did = new DID({
-  resolver: getResolver(),
-  provider: new Ed25519Provider(privateKey),
-})
-
-await did.authenticate()
-const ceramic = new CeramicClient(process.env.NODE_URL)
-ceramic.did = did
-
-const compose = new ComposeClient({
-  ceramic: ceramic,
-  definition,
-})
-
-const CREATE_ETH_ACCOUNT = `
-  mutation CreateEthAccount($input: CreateEthAccountInput!) {
-    createEthAccount(input: $input) {
-        document {
-        id
-        websiteID
-        address
-        ensName
-      }
-    }
-  }
-`
-const CREATE_WEBSITE = `
-  mutation CreateWebsite($input: CreateWebsiteInput!) {
-      createWebsite(input: $input) {
-				document {
-					id
-					websiteName
-				}
-    }
-  }
-`
-const CREATE_ADMIN = `
-  mutation CreateAdmin($input: CreateAdminInput!) {
-    createAdmin(input: $input) {
-      document {
-        id
-        adminID
-        websiteID
-      }
-    }
-  }
-`
+const compose = await createComposeClient()
 
 const readline = createInterface({
   input: process.stdin,
@@ -78,8 +24,8 @@ const readLineAsync = msg => {
     });
   });
 }
-console.log("Create a new website...")
 
+console.log("Create a new website...")
 const websiteName = await readLineAsync("Name (required): ")
 const description = await readLineAsync("Description: ")
 const image = await readLineAsync("Image IPFS CID: ")
@@ -92,8 +38,8 @@ const { data: websiteData } = await compose.executeQuery(CREATE_WEBSITE, {
       description,
       image,
       metadata: {
-        createdAt: (new Date).toISOString(),
-        updatedAt: (new Date).toISOString()
+        createdAt: (new Date).toString(),
+        updatedAt: (new Date).toString()
       }
     }
   }
@@ -109,8 +55,8 @@ const { data: admintEthAccountData } = await compose.executeQuery(CREATE_ETH_ACC
       address: process.env.ADMIN_ETH_ADDRESS,
       websiteID: website.id,
       metadata: {
-        createdAt: (new Date).toISOString(),
-        updatedAt: (new Date).toISOString()
+        createdAt: (new Date).toString(),
+        updatedAt: (new Date).toString()
       }
     }
   }
@@ -126,12 +72,25 @@ await compose.executeQuery(CREATE_ADMIN, {
       websiteID: adminEthAccount.websiteID,
       super: true,
       metadata: {
-        createdAt: (new Date).toISOString(),
-        updatedAt: (new Date).toISOString()
+        createdAt: (new Date).toString(),
+        updatedAt: (new Date).toString()
       }
     }
   }
 })
+
+const promises = pieceCategories.map((category) => {
+  return compose.executeQuery(CREATE_CATEGORY, {
+    input: {
+      content: {
+        websiteID: adminEthAccount.websiteID,
+        name: category
+      }
+    }
+  })
+})
+
+await Promise.all(promises)
 
 console.log(`${website.websiteName} SiteID: ${website.id}`)
 
