@@ -5,12 +5,12 @@ import createDID from '../utils/createDID.js';
 
 if (!process.env.NODE_URL) throw new Error("ENVIROMENT VARIABLE NODE_URL UNDEFINED")
 
-const did = createDID()
+const did = await createDID()
 
 const server = await serveEncodedDefinition({
   ceramicURL: process.env.NODE_URL,
   graphiql: true,
-  path: new URL('../composites/merged-composite.json', import.meta.url),
+  path: './composites/merged-composite.json',
   port: 5001,
   did
 })
