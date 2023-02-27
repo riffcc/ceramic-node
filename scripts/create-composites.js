@@ -9,7 +9,7 @@ if (!process.env.ADMIN_ETH_ADDRESS) throw new Error("ENVIROMENT VAR ADMIN_ETH_AD
 const did = await createDID()
 const ceramic = createCeramicClient(did)
 
-console.log("Create composites from schemas...")
+console.log("Create schemas and composites...")
 
 // Create Website graphql schema
 fs.writeFile('./schemas/Website.graphql', `type Website @createModel(accountRelation: LIST, description: "A Website") {
@@ -74,31 +74,10 @@ const categoryComposite = await createComposite(ceramic, './schemas/Category.gra
 const categoryModelID = categoryComposite.modelIDs[1]
 
 // Create Piece graphql schema
-fs.writeFile('./schemas/Piece.graphql', `type Website @loadModel(id: "${websiteModelID}") {
-  id: ID!
-}
-
-type EthAccount @loadModel(id: "${ethAccountModelID}") {
-  id: ID!
-}
-
-type Category @loadModel(id: "${categoryModelID}") {
-  id: ID!
-}
-
-type Piece @createModel(accountRelation: LIST, description: "Piece of content") {
-  websiteID: StreamID! @documentReference(model: "Website")
-  website: Website @relationDocument(property: "websiteID")
-  ownerID: StreamID! @documentReference(model: "EthAccount")
-  owner: EthAccount @relationDocument(property: "ownerID")
+fs.writeFile('./schemas/Piece.graphql', `type Piece @createModel(accountRelation: LIST, description: "Piece of content") {
   name: String @string(maxLength: 100)
   CID: String @string(maxLength: 100)
-  categoryID: StreamID! @documentReference(model: "Category")
-  category: Category @relationDocument(property: "categoryID")
   details: Details
-  approved: Boolean
-  rejected: Boolean
-  rejectionReason: String @string(maxLength: 150)
   metadata: Metadata!
 }
 
@@ -130,10 +109,14 @@ type Details {
 })
 await new Promise((resolve) => setTimeout(() => resolve(), 3000))
 const pieceComposite = await createComposite(ceramic, './schemas/Piece.graphql')
-const pieceModelID = pieceComposite.modelIDs[3]
+const pieceModelID = pieceComposite.modelIDs[0]
 
-// Create FeaturedPiece graphql schema
-fs.writeFile('./schemas/Featured.graphql', `type Website @loadModel(id: "${websiteModelID}") {
+// Create Pin graphql schema
+fs.writeFile('./schemas/Pin.graphql', `type Website @loadModel(id: "${websiteModelID}") {
+  id: ID!
+}
+
+type EthAccount @loadModel(id: "${ethAccountModelID}") {
   id: ID!
 }
 
@@ -141,18 +124,106 @@ type Piece @loadModel(id: "${pieceModelID}") {
   id: ID!
 }
 
+type Category @loadModel(id: "${categoryModelID}") {
+  id: ID!
+}
+
+type Pin @createModel(accountRelation: LIST, description: "A pin for a piece") {
+  websiteID: StreamID! @documentReference(model: "Website")
+  website: Website! @relationDocument(property: "websiteID")
+  ownerID: StreamID! @documentReference(model: "EthAccount")
+  owner: EthAccount @relationDocument(property: "ownerID")
+	pieceID: StreamID! @documentReference(model: "Piece")
+	piece: Piece! @relationDocument(property: "pieceID")
+	categoryID: StreamID! @documentReference(model: "Category")
+	category: Category! @relationDocument(property: "categoryID")
+  approved: Boolean
+  rejected: Boolean
+  rejectionReason: String @string(maxLength: 150)
+  deleted: Boolean
+}
+`, function (err) {
+  if (err) return console.log(err);
+  console.log('Pin schema created!');
+})
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
+const pinComposite = await createComposite(ceramic, './schemas/Pin.graphql')
+const pinModelID = pinComposite.modelIDs[4]
+
+// Create PinLike graphql schema
+fs.writeFile('./schemas/PinLike.graphql', `type Pin @loadModel(id: "${pinModelID}") {
+  id: ID!
+}
+
+type EthAccount @loadModel(id: "${ethAccountModelID}") {
+  id: ID!
+}
+
+type Category @loadModel(id: "${categoryModelID}") {
+  id: ID!
+}
+
+type PinLike @createModel(accountRelation: LIST, description: "A like for a pin") {
+	pinID: StreamID! @documentReference(model: "Pin")
+	pin: Pin! @relationDocument(property: "pinID")
+	categoryID: StreamID! @documentReference(model: "Category")
+	category: Category! @relationDocument(property: "categoryID")
+  ownerID: StreamID! @documentReference(model: "EthAccount")
+  owner: EthAccount! @relationDocument(property: "ownerID")
+}
+`, function (err) {
+  if (err) return console.log(err);
+  console.log('PinLike schema created!');
+})
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
+const pinLikeComposite = await createComposite(ceramic, './schemas/PinLike.graphql')
+const pinLikeModelID = pinLikeComposite.modelIDs[3]
+
+// Create PinDislike graphql schema
+fs.writeFile('./schemas/PinDislike.graphql', `type Pin @loadModel(id: "${pinModelID}") {
+  id: ID!
+}
+
+type EthAccount @loadModel(id: "${ethAccountModelID}") {
+  id: ID!
+}
+
+type Category @loadModel(id: "${categoryModelID}") {
+  id: ID!
+}
+
+type PinDislike @createModel(accountRelation: LIST, description: "A like for a pin") {
+	pinID: StreamID! @documentReference(model: "Pin")
+	pin: Pin! @relationDocument(property: "pinID")
+	categoryID: StreamID! @documentReference(model: "Category")
+	category: Category! @relationDocument(property: "categoryID")
+  ownerID: StreamID! @documentReference(model: "EthAccount")
+  owner: EthAccount! @relationDocument(property: "ownerID")
+}
+`, function (err) {
+  if (err) return console.log(err);
+  console.log('PinDislike schema created!');
+})
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
+const pinDislikeComposite = await createComposite(ceramic, './schemas/PinDislike.graphql')
+const pinDislikeModelID = pinDislikeComposite.modelIDs[3]
+
+// Create Featured graphql schema
+fs.writeFile('./schemas/Featured.graphql', `type Website @loadModel(id: "${websiteModelID}") {
+  id: ID!
+}
+
+type Pin @loadModel(id: "${pinModelID}") {
+  id: ID!
+}
+
 type Featured @createModel(accountRelation: LIST, description: "A featured content") {
   websiteID: StreamID! @documentReference(model: "Website")
   website: Website! @relationDocument(property: "websiteID")
-	pieceID: StreamID! @documentReference(model: "Piece")
-	piece: Piece! @relationDocument(property: "pieceID")
+	pinID: StreamID! @documentReference(model: "Pin")
+	pin: Pin! @relationDocument(property: "pinID")
   startAt: String! @string(maxLength:100)
   endAt: String! @string(maxLength:100)
-}
-
-type Metadata {
-  createdAt: String! @string(maxLength:100)
-  updatedAt: String! @string(maxLength:100)
 }
 `, function (err) {
   if (err) return console.log(err);
@@ -161,93 +232,6 @@ type Metadata {
 await new Promise((resolve) => setTimeout(() => resolve(), 3000))
 const featuredComposite = await createComposite(ceramic, './schemas/Featured.graphql')
 const featuredModelID = featuredComposite.modelIDs[2]
-
-// Create PieceLike graphql schema
-fs.writeFile('./schemas/PieceLike.graphql', `type Piece @loadModel(id: "${pieceModelID}") {
-  id: ID!
-}
-
-type EthAccount @loadModel(id: "${ethAccountModelID}") {
-  id: ID!
-}
-
-type PieceLike @createModel(accountRelation: LIST, description: "A like for a piece") {
-	pieceID: StreamID! @documentReference(model: "Piece")
-	piece: Piece! @relationDocument(property: "pieceID")
-  ownerID: StreamID! @documentReference(model: "EthAccount")
-  owner: EthAccount! @relationDocument(property: "ownerID")
-}
-`, function (err) {
-  if (err) return console.log(err);
-  console.log('PieceLike schema created!');
-})
-await new Promise((resolve) => setTimeout(() => resolve(), 3000))
-const pieceLikeComposite = await createComposite(ceramic, './schemas/PieceLike.graphql')
-const pieceLikeModelID = pieceLikeComposite.modelIDs[2]
-
-// Create PieceDislike graphql schema
-fs.writeFile('./schemas/PieceDislike.graphql', `type Piece @loadModel(id: "${pieceModelID}") {
-  id: ID!
-}
-
-type EthAccount @loadModel(id: "${ethAccountModelID}") {
-  id: ID!
-}
-
-type PieceDislike @createModel(accountRelation: LIST, description: "A like for a piece") {
-	pieceID: StreamID! @documentReference(model: "Piece")
-	piece: Piece! @relationDocument(property: "pieceID")
-  ownerID: StreamID! @documentReference(model: "EthAccount")
-  owner: EthAccount! @relationDocument(property: "ownerID")
-}
-`, function (err) {
-  if (err) return console.log(err);
-  console.log('PieceDislike schema created!');
-})
-const pieceDislikeComposite = await createComposite(ceramic, './schemas/PieceDislike.graphql')
-const pieceDislikeModelID = pieceDislikeComposite.modelIDs[2]
-
-// Create CategoryLike graphql schema
-fs.writeFile('./schemas/CategoryLike.graphql', `type Category @loadModel(id: "${categoryModelID}") {
-  id: ID!
-}
-
-type EthAccount @loadModel(id: "${ethAccountModelID}") {
-  id: ID!
-}
-
-type CategoryLike @createModel(accountRelation: LIST, description: "A like for a category") {
-	categoryID: StreamID! @documentReference(model: "Category")
-	category: Category! @relationDocument(property: "categoryID")
-}
-`, function (err) {
-  if (err) return console.log(err);
-  console.log('CategoryLike schema created!');
-})
-await new Promise((resolve) => setTimeout(() => resolve(), 3000))
-const categoryLikeComposite = await createComposite(ceramic, './schemas/CategoryLike.graphql')
-const categoryLikeModelID = categoryLikeComposite.modelIDs[2]
-
-// Create CategoryDislike graphql schema
-fs.writeFile('./schemas/CategoryDislike.graphql', `type Category @loadModel(id: "${categoryModelID}") {
-  id: ID!
-}
-
-type EthAccount @loadModel(id: "${ethAccountModelID}") {
-  id: ID!
-}
-
-type CategoryDislike @createModel(accountRelation: LIST, description: "A dislike for a category") {
-	categoryID: StreamID! @documentReference(model: "Category")
-	category: Category! @relationDocument(property: "categoryID")
-}
-`, function (err) {
-  if (err) return console.log(err);
-  console.log('CategoryDislike schema created!');
-})
-await new Promise((resolve) => setTimeout(() => resolve(), 3000))
-const categoryDislikeComposite = await createComposite(ceramic, './schemas/CategoryDislike.graphql')
-const categoryDislikeModelID = categoryDislikeComposite.modelIDs[2]
 
 // Create Admin graphql schema
 fs.writeFile('./schemas/Admin.graphql', `type Website @loadModel(id: "${websiteModelID}") {
@@ -311,36 +295,32 @@ fs.writeFile('./schemas/FinalModel.graphql', `type Admin @loadModel(id: "${admin
   id: ID!
 }
 
-type PieceLike @loadModel(id: "${pieceLikeModelID}") {
-  id: ID!
-}
-
-type PieceDislike @loadModel(id: "${pieceDislikeModelID}") {
-  id: ID!
-}
-
 type Piece @loadModel(id: "${pieceModelID}") {
-  likes: [PieceLike] @relationFrom(model: "PieceLike", property: "pieceID")
-  likesCount: Int! @relationCountFrom(model: "PieceLike", property: "pieceID")
-  dislikes: [PieceDislike] @relationFrom(model: "PieceDislike", property: "pieceID")
-  dislikesCount: Int! @relationCountFrom(model: "PieceDislike", property: "pieceID")
-}
-
-type CategoryLike @loadModel(id: "${categoryLikeModelID}") {
   id: ID!
 }
 
-type CategoryDislike @loadModel(id: "${categoryDislikeModelID}") {
+type PinLike @loadModel(id: "${pinLikeModelID}") {
   id: ID!
+}
+
+type PinDislike @loadModel(id: "${pinDislikeModelID}") {
+  id: ID!
+}
+
+type Pin @loadModel(id: "${pinModelID}") {
+  likes: [PinLike] @relationFrom(model: "PinLike", property: "pinID")
+  likesCount: Int! @relationCountFrom(model: "PinLike", property: "pinID")
+  dislikes: [PinDislike] @relationFrom(model: "PinDislike", property: "pinID")
+  dislikesCount: Int! @relationCountFrom(model: "PinDislike", property: "pinID")
 }
 
 type Category @loadModel(id: "${categoryModelID}") {
-  pieces: [Piece] @relationFrom(model: "Piece", property: "categoryID")
-  piecesCount: Int! @relationCountFrom(model: "Piece", property: "categoryID")
-  likes: [CategoryLike] @relationFrom(model: "CategoryLike", property: "categoryID")
-  likesCount: Int! @relationCountFrom(model: "CategoryLike", property: "categoryID")
-  dislikes: [CategoryDislike] @relationFrom(model: "CategoryDislike", property: "categoryID")
-  dislikesCount: Int! @relationCountFrom(model: "CategoryDislike", property: "categoryID")
+  pins: [Piece] @relationFrom(model: "Pin", property: "categoryID")
+  pinsCount: Int! @relationCountFrom(model: "Pin", property: "categoryID")
+  likes: [PinLike] @relationFrom(model: "PinLike", property: "categoryID")
+  likesCount: Int! @relationCountFrom(model: "PinLike", property: "categoryID")
+  dislikes: [PinDislike] @relationFrom(model: "PinDislike", property: "categoryID")
+  dislikesCount: Int! @relationCountFrom(model: "PinDislike", property: "categoryID")
 }
 
 type Subscription @loadModel(id: "${subscriptionModelID}") {
@@ -352,21 +332,21 @@ type Featured @loadModel(id: "${featuredModelID}") {
 }
 
 type EthAccount @loadModel(id: "${ethAccountModelID}") {
-  pieces: [Piece] @relationFrom(model: "Piece", property: "ownerID")
-  piecesCount: Int! @relationCountFrom(model: "Piece", property: "ownerID")
+  pins: [Pin] @relationFrom(model: "Pin", property: "ownerID")
+  pinsCount: Int! @relationCountFrom(model: "Pin", property: "ownerID")
   managedWebsites: [Admin] @relationFrom(model: "Admin", property: "adminID")
   managedWebsitesCount: Int! @relationCountFrom(model: "Admin", property: "adminID")
-  pieceLikes: [PieceLike] @relationFrom(model: "PieceLike", property: "ownerID")
-  pieceLikesCount: Int! @relationCountFrom(model: "PieceLike", property: "ownerID")
-  pieceDislikes: [PieceDislike] @relationFrom(model: "PieceDislike", property: "ownerID")
-  pieceDislikesCount: Int! @relationCountFrom(model: "PieceDislike", property: "ownerID")
+  pinLikes: [PinLike] @relationFrom(model: "PinLike", property: "ownerID")
+  pinLikesCount: Int! @relationCountFrom(model: "PinLike", property: "ownerID")
+  pinDislikes: [PinDislike] @relationFrom(model: "PinDislike", property: "ownerID")
+  pinDislikesCount: Int! @relationCountFrom(model: "PinDislike", property: "ownerID")
 }
 
 type Website @loadModel(id: "${websiteModelID}") {
   categories: [Category] @relationFrom(model: "Category", property: "websiteID")
   categoriesCount: Int! @relationCountFrom(model: "Category", property: "websiteID")
-  pieces: [Piece] @relationFrom(model: "Piece", property: "websiteID")
-  piecesCount: Int! @relationCountFrom(model: "Piece", property: "websiteID")
+  pins: [Pin] @relationFrom(model: "Pin", property: "websiteID")
+  pinsCount: Int! @relationCountFrom(model: "Pin", property: "websiteID")
   featured: [Featured] @relationFrom(model: "Featured", property: "websiteID")
   featuredCount: Int! @relationCountFrom(model: "Featured", property: "websiteID")
   subscriptions: [Subscription] @relationFrom(model: "Subscription", property: "websiteID")
@@ -387,7 +367,7 @@ const mergedComposite = await createComposite(ceramic, './schemas/FinalModel.gra
 console.log("Indexing models...")
 await mergedComposite.startIndexingOn(ceramic)
 
-console.log("Writing config files...")
+console.log("Writing composedb files...")
 // Write encoded composite json file, definitions and composite granephql schema
 await writeEncodedComposite(mergedComposite, './composites/merged-composite.json')
 await new Promise((resolve) => setTimeout(() => resolve(), 3000))

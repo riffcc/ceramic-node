@@ -40,6 +40,24 @@ export const CREATE_PIECE = `
     }
   }
 `;
+export const CREATE_PIN = `
+  mutation CreatePin($input: CreatePinInput!) {
+    createPin(input: $input) {
+      document {
+        id
+      }
+    }
+  }
+`;
+export const UPDATE_PIN = `
+  mutation UpdatePin($input: UpdatePinInput!) {
+    updatePin(input: $input) {
+      document {
+        id
+      }
+    }
+  }
+`;
 export const CREATE_CATEGORY = `
   mutation CreateCategory($input: CreateCategoryInput!) {
     createCategory(input: $input) {

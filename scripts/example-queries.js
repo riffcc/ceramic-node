@@ -7,7 +7,8 @@ import {
   CREATE_CATEGORY,
   CREATE_SUBSCRIPTION,
   CREATE_PIECE,
-  pieceCategories
+  pieceCategories,
+  CREATE_PIN
 } from '../utils/constants.js'
 import createComposeClient from '../utils/createComposeClient.js'
 
@@ -85,6 +86,7 @@ const websiteInputs = [
 const createWebsitePromises = websiteInputs.map((input) => compose.executeQuery(CREATE_WEBSITE, input))
 const createWebsiteResults = await Promise.all(createWebsitePromises)
 const websiteIDs = createWebsiteResults.map((result) => result.data.createWebsite.document.id)
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
 
 // Create users eth accounts
 const ethAccountInputs = [
@@ -164,6 +166,8 @@ const ethAccountInputs = [
 
 const createEthAccountPromises = ethAccountInputs.map((input) => compose.executeQuery(CREATE_ETH_ACCOUNT, input))
 const createEthAccountResults = await Promise.all(createEthAccountPromises)
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
+
 const ethAccountIDs = createEthAccountResults.map((result) => result.data.createEthAccount.document.id)
 
 // Create categories
@@ -178,6 +182,8 @@ const createCategoryPromises = pieceCategories.map((category) => {
   })
 })
 const createCateoryResults = await Promise.all(createCategoryPromises)
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
+
 const categoryIDs = createCateoryResults.map((result) => result.data.createCategory.document.id)
 
 
@@ -201,12 +207,8 @@ const pieceInputs = [
   {
     input: {
       content: {
-        ownerID: ethAccountIDs[1],
-        websiteID: websiteIDs[0],
         name: "Eagle",
         CID: "bafkreifwanxptzn7jct56yl7q3h633ymn7bb2bjut6sxyulnas3skyg47e",
-        categoryID: categoryIDs[7],
-        approved: true,
         metadata: {
           createdAt: (new Date).toString(),
           updatedAt: (new Date).toString()
@@ -217,12 +219,8 @@ const pieceInputs = [
   {
     input: {
       content: {
-        ownerID: ethAccountIDs[1],
-        websiteID: websiteIDs[0],
         name: "ryan cat meme",
         CID: "bafkreiaakxh74mhjx2bflfv34rcpo27ynqbny3pg5nzrg6wjkw7qti2bmq",
-        categoryID: categoryIDs[7],
-        approved: false,
         metadata: {
           createdAt: (new Date).toString(),
           updatedAt: (new Date).toString()
@@ -233,12 +231,8 @@ const pieceInputs = [
   {
     input: {
       content: {
-        ownerID: ethAccountIDs[1],
-        websiteID: websiteIDs[0],
         name: "one doge coin",
         CID: "bafkreiemaqbrgqoj5gc3dkellc7gokyctm57dje36eogwgfgkjwncszaiy",
-        categoryID: categoryIDs[7],
-        approved: false,
         metadata: {
           createdAt: (new Date).toString(),
           updatedAt: (new Date).toString()
@@ -249,12 +243,8 @@ const pieceInputs = [
   {
     input: {
       content: {
-        ownerID: ethAccountIDs[2],
-        websiteID: websiteIDs[1],
         name: "The Dark Side Of The Moon - Pink Floyd",
         CID: "bafkreidybluf5b6o4mb345lnpgrpa5g3e2ztbndou4lj7y3crts4yqy53u",
-        categoryID: categoryIDs[5],
-        approved: true,
         metadata: {
           createdAt: (new Date).toString(),
           updatedAt: (new Date).toString()
@@ -265,12 +255,8 @@ const pieceInputs = [
   {
     input: {
       content: {
-        ownerID: ethAccountIDs[2],
-        websiteID: websiteIDs[1],
         name: "The King Of Limbs - Radiohead",
         CID: "bafkreibgighuh2i2ndn4vk4iustoveexry2nshjekgnebhfxvgkptu4yw4",
-        categoryID: categoryIDs[5],
-        approved: true,
         metadata: {
           createdAt: (new Date).toString(),
           updatedAt: (new Date).toString()
@@ -281,12 +267,8 @@ const pieceInputs = [
   {
     input: {
       content: {
-        ownerID: ethAccountIDs[3],
-        websiteID: websiteIDs[1],
         name: "Avatar (2009)",
         CID: "bafkreiff5rexqbzrcr4dmwh5vkbhpidkuauxwlqjvs4d4f3h62tplqqefu",
-        categoryID: categoryIDs[1],
-        approved: true,
         metadata: {
           createdAt: (new Date).toString(),
           updatedAt: (new Date).toString()
@@ -297,12 +279,8 @@ const pieceInputs = [
   {
     input: {
       content: {
-        ownerID: ethAccountIDs[3],
-        websiteID: websiteIDs[1],
         name: "The Terminator (1984)",
         CID: "bafkreie5vk3pum2xseuvfzszjalzn54vxprhq4ftkvdpirllf4zvyc7uza",
-        categoryID: categoryIDs[1],
-        approved: true,
         metadata: {
           createdAt: (new Date).toString(),
           updatedAt: (new Date).toString()
@@ -313,12 +291,8 @@ const pieceInputs = [
   {
     input: {
       content: {
-        ownerID: ethAccountIDs[4],
-        websiteID: websiteIDs[3],
         name: "Watch Dogs",
         CID: "bafkreibqq557b4syrfvl62vzx6e7rcjn62eq43azcqyvy6qps2yro2of3e",
-        categoryID: categoryIDs[3],
-        approved: true,
         metadata: {
           createdAt: (new Date).toString(),
           updatedAt: (new Date).toString()
@@ -329,12 +303,8 @@ const pieceInputs = [
   {
     input: {
       content: {
-        ownerID: ethAccountIDs[4],
-        websiteID: websiteIDs[3],
         name: "The Elder Scrolls V",
         CID: "bafkreib4wztoh7zwspcf7pe73saus7cb4tldibxamafpzzz5fgeojaj7ky",
-        categoryID: categoryIDs[3],
-        approved: true,
         metadata: {
           createdAt: (new Date).toString(),
           updatedAt: (new Date).toString()
@@ -345,12 +315,8 @@ const pieceInputs = [
   {
     input: {
       content: {
-        ownerID: ethAccountIDs[5],
-        websiteID: websiteIDs[4],
         name: "Harry Potter and The Philosopher's Stone",
         CID: "bafkreifhgqq24zmjg3rvx3nsrrkcxj6wjysupjn7hmii4bv5g365rrbh6u",
-        categoryID: categoryIDs[4],
-        approved: true,
         metadata: {
           createdAt: (new Date).toString(),
           updatedAt: (new Date).toString()
@@ -361,12 +327,8 @@ const pieceInputs = [
   {
     input: {
       content: {
-        ownerID: ethAccountIDs[5],
-        websiteID: websiteIDs[4],
         name: "The Diary of Anne Frank",
         CID: "bafkreiblehldyvprjvxncwj4guvk2iq2f7wuiutwu6bh7mumiyv7aef25e",
-        categoryID: categoryIDs[4],
-        approved: true,
         metadata: {
           createdAt: (new Date).toString(),
           updatedAt: (new Date).toString()
@@ -375,8 +337,134 @@ const pieceInputs = [
     }
   }
 ]
+
 const createPiecePromises = pieceInputs.map((input) => compose.executeQuery(CREATE_PIECE, input))
-await Promise.all(createPiecePromises)
+const piecesResult = await Promise.all(createPiecePromises)
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
+
+// Create pins
+const pinInputs = [
+  {
+    input: {
+      content: {
+        ownerID: ethAccountIDs[1],
+        websiteID: websiteIDs[0],
+        categoryID: categoryIDs[7],
+        approved: true,
+      }
+    }
+  },
+  {
+    input: {
+      content: {
+        ownerID: ethAccountIDs[1],
+        websiteID: websiteIDs[0],
+        categoryID: categoryIDs[7],
+        approved: false,
+      }
+    }
+  },
+  {
+    input: {
+      content: {
+        ownerID: ethAccountIDs[1],
+        websiteID: websiteIDs[0],
+        categoryID: categoryIDs[7],
+        approved: false,
+      }
+    }
+  },
+  {
+    input: {
+      content: {
+        ownerID: ethAccountIDs[2],
+        websiteID: websiteIDs[1],
+        categoryID: categoryIDs[5],
+        approved: true,
+      }
+    }
+  },
+  {
+    input: {
+      content: {
+        ownerID: ethAccountIDs[2],
+        websiteID: websiteIDs[1],
+        categoryID: categoryIDs[5],
+        approved: true,
+      }
+    }
+  },
+  {
+    input: {
+      content: {
+        ownerID: ethAccountIDs[3],
+        websiteID: websiteIDs[1],
+        categoryID: categoryIDs[1],
+        approved: true,
+      }
+    }
+  },
+  {
+    input: {
+      content: {
+        ownerID: ethAccountIDs[3],
+        websiteID: websiteIDs[1],
+        categoryID: categoryIDs[1],
+        approved: true,
+      }
+    }
+  },
+  {
+    input: {
+      content: {
+        ownerID: ethAccountIDs[4],
+        websiteID: websiteIDs[3],
+        categoryID: categoryIDs[3],
+        approved: true,
+      }
+    }
+  },
+  {
+    input: {
+      content: {
+        ownerID: ethAccountIDs[4],
+        websiteID: websiteIDs[3],
+        categoryID: categoryIDs[3],
+        approved: true,
+      }
+    }
+  },
+  {
+    input: {
+      content: {
+        ownerID: ethAccountIDs[5],
+        websiteID: websiteIDs[4],
+        categoryID: categoryIDs[4],
+        approved: true,
+      }
+    }
+  },
+  {
+    input: {
+      content: {
+        ownerID: ethAccountIDs[5],
+        websiteID: websiteIDs[4],
+        categoryID: categoryIDs[4],
+        approved: true,
+      }
+    }
+  }
+]
+const createPinPromise = piecesResult.map((result, i) => compose.executeQuery(CREATE_PIN, {
+  input: {
+    content: {
+      ...pinInputs[i].input.content,
+      pieceID: result.data.createPiece.document.id
+    }
+  }
+}))
+await Promise.all(createPinPromise)
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
 
 
 // Create subscriptions
