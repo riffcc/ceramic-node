@@ -2,6 +2,8 @@
 
 Allows users to create Piece type documents and link them to Pin type documents via the Ceramic API and Admin Server. The following describes the document creation process and the actions allowed for users and administrators.
 
+The Admin Server API performs its operations on the authenticated Ceramic client using its own DID-key. As a result, Pin documents are always created through the Admin Server API.
+
 ## Document creation
 When a user uploads a new document via the /upload page in Riff.cc, a Ceramic API call is made authenticated with the user's DID-key. This creates a new document of type Piece and returns the StreamID of the new document.
 
@@ -17,7 +19,7 @@ After creating the Piece document, the application makes a call to the Admin Ser
    rejected?: boolean;
    rejectionReason?: string;
 }
-´´´
+```
 
 This data is used to create a new Pin document that links to the Piece document via its StreamID, named PieceID in the data object.
 
@@ -46,4 +48,8 @@ The "delete" action allows to delete a Pin document and therefore also the linke
 The "unreject" action allows to undo a previous reject action on a Pin document.
 
 ### Action **approve**
+<<<<<<< HEAD
 The "approve" action allows to Pin a document as approved.
+=======
+The "approve" action allows to "Pin" a document as approved.
+>>>>>>> 47a687b1254273267146ef29e798ca1e5fce3a3d
