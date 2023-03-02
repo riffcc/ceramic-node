@@ -2,6 +2,8 @@
 
 Allows users to create "Piece" type documents and link them to "Pin" type documents via the Ceramic API and Admin Server. The following describes the document creation process and the actions allowed for users and administrators.
 
+The Admin Server API performs its operations on the authenticated Ceramic client using its own DID-key. As a result, Pin documents are always created through the Admin Server API.
+
 ## Document creation
 When a user uploads a new document via the /upload page in Riff.cc, a Ceramic API call is made authenticated with the user's DID-key. This creates a new document of type "Piece" and returns the StreamID of the new document.
 
