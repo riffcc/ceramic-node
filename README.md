@@ -3,13 +3,13 @@ Ceramic tooling for Riff.CC. Required for the Riff.CC Ceramic Prototype.
 
 ## Requirements 
 
-Install the hotfix version ceramic/cli and composedb/cli
+Install the required global packages ceramic/cli and composedb/cli
 
 ```bash
-yarn global add @ceramicnetwork/cli@hotfix
+yarn global add @ceramicnetwork/cli
 ```
 ```bash
-yarn global add @composedb/cli@next
+yarn global add @composedb/cli
 ```
 
 ## Usage
@@ -79,7 +79,7 @@ Copy the DID key and insert it into your node configuration file (normally this 
   },
   "indexing": {
     "db": "sqlite:///home/user/.ceramic/indexing.sqlite",
-    "allow-queries-before-historical-sync": true
+    "allow-queries-before-historical-sync": false
   }
 }
 ```
@@ -113,6 +113,14 @@ For testing development you can execute graphql example queries.
 yarn run graphql:example-queries
 ```
 > This script generates a Test WebsiteID, must be copied into **riff.cc-data-manager-poc/.env.local**
+
+
+It is required to run the Admin Server API, so that users and admins can create and modify documents.
+```bash
+yarn run admin:server
+```
+
+For more info about API, visit [ADMIN-SERVER-API.md](https://github.com/riffcc/ceramic-node/blob/main/ADMIN-SERVER-API.md).
 
 Optionally you can run a GraphQL server with the GraphQL interface
 ```bash
