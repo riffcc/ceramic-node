@@ -120,7 +120,7 @@ It is required to run the Admin Server API, so that users and admins can create 
 yarn run admin:server
 ```
 
-For more info about API, visit [ADMIN-SERVER-API.md](https://github.com/riffcc/ceramic-node/blob/main/ADMIN-SERVER-API.md).
+For more info about API, visit [ADMIN-SERVER-API](https://github.com/riffcc/ceramic-node/blob/main/ADMIN-SERVER-API.md).
 
 Optionally you can run a GraphQL server with the GraphQL interface
 ```bash
