@@ -7,7 +7,7 @@ When a user uploads a new document via the /upload page in Riff.cc, a Ceramic AP
 
 After creating the "Piece" document, the application makes a call to the Admin Server through the /pin route, providing the following data in the request body:
 
-```typescript
+```javascript
 {
    ownerID?: string;
    websiteID?: string;
