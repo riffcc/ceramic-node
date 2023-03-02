@@ -48,8 +48,4 @@ The "delete" action allows to delete a Pin document and therefore also the linke
 The "unreject" action allows to undo a previous reject action on a Pin document.
 
 ### Action **approve**
-<<<<<<< HEAD
 The "approve" action allows to Pin a document as approved.
-=======
-The "approve" action allows to "Pin" a document as approved.
->>>>>>> 47a687b1254273267146ef29e798ca1e5fce3a3d
