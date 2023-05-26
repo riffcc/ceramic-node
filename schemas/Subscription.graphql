@@ -1,0 +1,17 @@
+type Website @loadModel(id: "kjzl6hvfrbw6c79umg416zn1u52s57rhmmyivi4sz019znaoysjufo5cjafp4fq") {
+  id: ID!
+}
+
+type Subscription @createModel(accountRelation: LIST, description: "Subcription Website") {
+  websiteID: StreamID! @documentReference(model: "Website")
+  website: Website! @relationDocument(property: "websiteID")
+	subscribedID: StreamID! @documentReference(model: "Website")
+	subscribedWebsite: Website! @relationDocument(property: "subscribedID")
+	inactive: Boolean
+  metadata: Metadata!
+}
+
+type Metadata {
+  createdAt: String! @string(maxLength:100)
+  updatedAt: String! @string(maxLength:100)
+}

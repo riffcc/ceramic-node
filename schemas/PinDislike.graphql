@@ -1,0 +1,20 @@
+type Pin @loadModel(id: "kjzl6hvfrbw6caf3sn3ykb0jpxs34rc6bod8dpn7ti6fygbovxrm7m7kpbmmeal") {
+  id: ID!
+}
+
+type EthAccount @loadModel(id: "kjzl6hvfrbw6c9i1xror5us4krzm1xp3ufzj9tz0byu164kaihrs13b2dpg69zs") {
+  id: ID!
+}
+
+type Category @loadModel(id: "kjzl6hvfrbw6c8yy6avq6svy30fwtlvjygkhkknt7ndd2ryyio8xhxx4pb5g4nh") {
+  id: ID!
+}
+
+type PinDislike @createModel(accountRelation: LIST, description: "A like for a pin") {
+	pinID: StreamID! @documentReference(model: "Pin")
+	pin: Pin! @relationDocument(property: "pinID")
+	categoryID: StreamID! @documentReference(model: "Category")
+	category: Category! @relationDocument(property: "categoryID")
+  ownerID: StreamID! @documentReference(model: "EthAccount")
+  owner: EthAccount! @relationDocument(property: "ownerID")
+}

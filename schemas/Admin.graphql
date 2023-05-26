@@ -1,0 +1,22 @@
+type Website @loadModel(id: "kjzl6hvfrbw6c79umg416zn1u52s57rhmmyivi4sz019znaoysjufo5cjafp4fq") {
+  id: ID!
+}
+
+type EthAccount @loadModel(id: "kjzl6hvfrbw6c9i1xror5us4krzm1xp3ufzj9tz0byu164kaihrs13b2dpg69zs") {
+  id: ID!
+}
+
+type Admin @createModel(accountRelation: LIST, description: "Admin Website") {
+  websiteID: StreamID! @documentReference(model: "Website")
+  website: Website! @relationDocument(property: "websiteID")
+	adminID: StreamID! @documentReference(model: "EthAccount")
+	admin: EthAccount! @relationDocument(property: "adminID")
+  super: Boolean!
+  inactive: Boolean
+  metadata: Metadata!
+}
+
+type Metadata {
+  createdAt: String! @string(maxLength:100)
+  updatedAt: String! @string(maxLength:100)
+}

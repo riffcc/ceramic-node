@@ -1,0 +1,15 @@
+type Website @loadModel(id: "kjzl6hvfrbw6c79umg416zn1u52s57rhmmyivi4sz019znaoysjufo5cjafp4fq") {
+  id: ID!
+}
+
+type EthAccount @createModel(accountRelation: LIST, description: "An Ethereum Account") {
+  address: String! @string(maxLength: 66)
+  ensName: String @string(maxLength: 100)
+  websiteID: StreamID! @documentReference(model: "Website")
+  metadata: Metadata!
+}
+
+type Metadata {
+  createdAt: String! @string(maxLength: 100)
+  updatedAt: String! @string(maxLength: 100)
+}

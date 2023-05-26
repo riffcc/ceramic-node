@@ -1,0 +1,16 @@
+type Website @loadModel(id: "kjzl6hvfrbw6c79umg416zn1u52s57rhmmyivi4sz019znaoysjufo5cjafp4fq") {
+  id: ID!
+}
+
+type Pin @loadModel(id: "kjzl6hvfrbw6caf3sn3ykb0jpxs34rc6bod8dpn7ti6fygbovxrm7m7kpbmmeal") {
+  id: ID!
+}
+
+type Featured @createModel(accountRelation: LIST, description: "A featured content") {
+  websiteID: StreamID! @documentReference(model: "Website")
+  website: Website! @relationDocument(property: "websiteID")
+	pinID: StreamID! @documentReference(model: "Pin")
+	pin: Pin! @relationDocument(property: "pinID")
+  startAt: String! @string(maxLength:100)
+  endAt: String! @string(maxLength:100)
+}

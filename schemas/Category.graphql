@@ -1,0 +1,9 @@
+type Website @loadModel(id: "kjzl6hvfrbw6c79umg416zn1u52s57rhmmyivi4sz019znaoysjufo5cjafp4fq") {
+  id: ID!
+}
+
+type Category @createModel(accountRelation: LIST, description: "A category") {
+  websiteID: StreamID! @documentReference(model: "Website")
+  website: Website @relationDocument(property: "websiteID")
+  name: String! @string(maxLength:100)
+}

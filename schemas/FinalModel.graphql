@@ -1,0 +1,65 @@
+type Admin @loadModel(id: "kjzl6hvfrbw6cad3hysntm7kwr4n5ykjmbkedzsqjhzfeao60osho9rb21rx6dz") {
+  id: ID!
+}
+
+type Piece @loadModel(id: "kjzl6hvfrbw6cahnukjgrt7bs4ax4zhb4hmq1yvl5awyzs00g3ykw4nzhqgbtza") {
+  id: ID!
+}
+
+type PinLike @loadModel(id: "kjzl6hvfrbw6c6vpwyt7kit5ff39bl3wylnrtiseuz07im6pxhlj047txdmm5zi") {
+  id: ID!
+}
+
+type PinDislike @loadModel(id: "kjzl6hvfrbw6c91mdlheqfhwidge17pw9evvq50qnqjk94eyxm6ylk9zjea1ooy") {
+  id: ID!
+}
+
+type Pin @loadModel(id: "kjzl6hvfrbw6caf3sn3ykb0jpxs34rc6bod8dpn7ti6fygbovxrm7m7kpbmmeal") {
+  likes: [PinLike] @relationFrom(model: "PinLike", property: "pinID")
+  likesCount: Int! @relationCountFrom(model: "PinLike", property: "pinID")
+  dislikes: [PinDislike] @relationFrom(model: "PinDislike", property: "pinID")
+  dislikesCount: Int! @relationCountFrom(model: "PinDislike", property: "pinID")
+}
+
+type Category @loadModel(id: "kjzl6hvfrbw6c8yy6avq6svy30fwtlvjygkhkknt7ndd2ryyio8xhxx4pb5g4nh") {
+  pins: [Piece] @relationFrom(model: "Pin", property: "categoryID")
+  pinsCount: Int! @relationCountFrom(model: "Pin", property: "categoryID")
+  likes: [PinLike] @relationFrom(model: "PinLike", property: "categoryID")
+  likesCount: Int! @relationCountFrom(model: "PinLike", property: "categoryID")
+  dislikes: [PinDislike] @relationFrom(model: "PinDislike", property: "categoryID")
+  dislikesCount: Int! @relationCountFrom(model: "PinDislike", property: "categoryID")
+}
+
+type Subscription @loadModel(id: "kjzl6hvfrbw6c56ctk0dpd3uqcx77dqjpgti4uthnj2wezaz18jzavay1wwd24b") {
+  id: ID!
+}
+
+type Featured @loadModel(id: "kjzl6hvfrbw6caou7c53p0nbsj9xic41lh09qel2xyudp1f4n59fs1qewp78y1q") {
+  id: ID!
+}
+
+type EthAccount @loadModel(id: "kjzl6hvfrbw6c9i1xror5us4krzm1xp3ufzj9tz0byu164kaihrs13b2dpg69zs") {
+  pins: [Pin] @relationFrom(model: "Pin", property: "ownerID")
+  pinsCount: Int! @relationCountFrom(model: "Pin", property: "ownerID")
+  managedWebsites: [Admin] @relationFrom(model: "Admin", property: "adminID")
+  managedWebsitesCount: Int! @relationCountFrom(model: "Admin", property: "adminID")
+  pinLikes: [PinLike] @relationFrom(model: "PinLike", property: "ownerID")
+  pinLikesCount: Int! @relationCountFrom(model: "PinLike", property: "ownerID")
+  pinDislikes: [PinDislike] @relationFrom(model: "PinDislike", property: "ownerID")
+  pinDislikesCount: Int! @relationCountFrom(model: "PinDislike", property: "ownerID")
+}
+
+type Website @loadModel(id: "kjzl6hvfrbw6c79umg416zn1u52s57rhmmyivi4sz019znaoysjufo5cjafp4fq") {
+  categories: [Category] @relationFrom(model: "Category", property: "websiteID")
+  categoriesCount: Int! @relationCountFrom(model: "Category", property: "websiteID")
+  pins: [Pin] @relationFrom(model: "Pin", property: "websiteID")
+  pinsCount: Int! @relationCountFrom(model: "Pin", property: "websiteID")
+  featured: [Featured] @relationFrom(model: "Featured", property: "websiteID")
+  featuredCount: Int! @relationCountFrom(model: "Featured", property: "websiteID")
+  subscriptions: [Subscription] @relationFrom(model: "Subscription", property: "websiteID")
+  subscriptionsCount: Int! @relationCountFrom(model: "Subscription", property: "websiteID")
+  admins: [Admin] @relationFrom(model: "Admin", property: "websiteID")
+  adminsCount: Int! @relationCountFrom(model: "Admin", property: "websiteID")
+  users: [EthAccount] @relationFrom(model: "EthAccount", property: "websiteID")
+  usersCount: Int! @relationCountFrom(model: "EthAccount", property: "websiteID")
+}

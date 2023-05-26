@@ -1,0 +1,30 @@
+type Website @loadModel(id: "kjzl6hvfrbw6c79umg416zn1u52s57rhmmyivi4sz019znaoysjufo5cjafp4fq") {
+  id: ID!
+}
+
+type EthAccount @loadModel(id: "kjzl6hvfrbw6c9i1xror5us4krzm1xp3ufzj9tz0byu164kaihrs13b2dpg69zs") {
+  id: ID!
+}
+
+type Piece @loadModel(id: "kjzl6hvfrbw6cahnukjgrt7bs4ax4zhb4hmq1yvl5awyzs00g3ykw4nzhqgbtza") {
+  id: ID!
+}
+
+type Category @loadModel(id: "kjzl6hvfrbw6c8yy6avq6svy30fwtlvjygkhkknt7ndd2ryyio8xhxx4pb5g4nh") {
+  id: ID!
+}
+
+type Pin @createModel(accountRelation: LIST, description: "A pin for a piece") {
+  websiteID: StreamID! @documentReference(model: "Website")
+  website: Website! @relationDocument(property: "websiteID")
+  ownerID: StreamID! @documentReference(model: "EthAccount")
+  owner: EthAccount @relationDocument(property: "ownerID")
+	pieceID: StreamID! @documentReference(model: "Piece")
+	piece: Piece! @relationDocument(property: "pieceID")
+	categoryID: StreamID! @documentReference(model: "Category")
+	category: Category! @relationDocument(property: "categoryID")
+  approved: Boolean
+  rejected: Boolean
+  rejectionReason: String @string(maxLength: 150)
+  deleted: Boolean
+}
