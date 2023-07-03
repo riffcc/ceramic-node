@@ -10,6 +10,15 @@ export const CREATE_ETH_ACCOUNT = `
     }
   }
 `;
+export const UPDATE_ETH_ACCOUNT = `
+  mutation UpdateEthAccount($input: UpdateEthAccountInput!) {
+    updateEthAccount(input: $input) {
+      document {
+        id
+      }
+    }
+  }
+`;
 export const CREATE_WEBSITE = `
   mutation CreateWebsite($input: CreateWebsiteInput!) {
       createWebsite(input: $input) {
