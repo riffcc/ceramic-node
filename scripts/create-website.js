@@ -31,6 +31,7 @@ const description = await readLineAsync("Description: ")
 const image = await readLineAsync("Image IPFS CID: ")
 readline.close()
 // Create websites
+compose
 const { data: websiteData } = await compose.executeQuery(CREATE_WEBSITE, {
   input: {
     content: {
@@ -44,8 +45,8 @@ const { data: websiteData } = await compose.executeQuery(CREATE_WEBSITE, {
     }
   }
 })
-
-const website = websiteData.createWebsite.document
+console.log(websiteData);
+const website = websiteData?.createWebsite?.document
 
 // Create admin eth account
 
@@ -57,6 +58,9 @@ const { data: admintEthAccountData } = await compose.executeQuery(CREATE_ETH_ACC
       metadata: {
         createdAt: (new Date).toString(),
         updatedAt: (new Date).toString()
+      },
+      settings: {
+        autoplay: true
       }
     }
   }
