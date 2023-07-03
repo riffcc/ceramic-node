@@ -4,8 +4,9 @@ dotenv.config()
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import { CREATE_PIN, UPDATE_PIN } from '../utils/constants.js';
+import { CREATE_PIN, UPDATE_PIN, CREATE_ETH_ACCOUNT, UPDATE_ETH_ACCOUNT } from '../utils/constants.js';
 import createComposeClient from '../utils/createComposeClient.js';
+import verifySignature from '../utils/verifySignature.js';
 const app = express();
 
 app.use(cors({
@@ -19,6 +20,72 @@ app.get('/', function (req, res) {
   res.send('Hello world!');
 });
 
+app.post('/account', async (req, res) => {
+  const action = req.body.action
+  const accountData = req.body.data
+  const msg = req.body.msg
+  const signature = req.body.signature
+  const address = req.body.address
+
+
+  const isValid = verifySignature(msg, signature, address)
+  
+  if (!isValid){
+    res.status(500).json({
+      message: "Signature invalid."
+    })
+  }
+
+  try {
+    const compose = await createComposeClient()
+
+    if (action === 'create') {
+      const input = {
+        content: {
+          ...accountData,
+          settings: {
+            autoplay: true
+          }
+        }
+      }
+      const result = await compose.executeQuery(CREATE_ETH_ACCOUNT, {
+        input
+      })
+      
+      res.status(200).json({
+        accountID: result.data.createEthAccount.document.id
+      })
+    } else if (action === 'edit') {
+
+      const accountId = req.body.accountId
+      if (!accountId) {
+        res.status(500).json({
+          message: "AccountId missing param"
+        })
+      }
+      const input = {
+        id: accountId,
+        content: {
+          ...accountData
+        }
+      }
+      const result = await compose.executeQuery(UPDATE_ETH_ACCOUNT, {
+        input
+      })
+      if (!result.data.updateEthAccount) {
+        res.status(500).json({
+          message: "Error on update account"
+        })
+      }
+      res.status(200).json({
+        accountID: result.data.updateEthAccount.document.id
+      })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: JSON.stringify(error) })
+  }
+})
 app.post('/pin', async (req, res) => {
   const action = req.body.action
   const adminID = req.body.adminID
