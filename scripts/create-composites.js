@@ -41,8 +41,12 @@ type EthAccount @createModel(accountRelation: LIST, description: "An Ethereum Ac
   ensName: String @string(maxLength: 100)
   websiteID: StreamID! @documentReference(model: "Website")
   metadata: Metadata!
+  settings: Settings!
 }
 
+type Settings {
+  autoplay: Boolean!
+}
 type Metadata {
   createdAt: String! @string(maxLength: 100)
   updatedAt: String! @string(maxLength: 100)
@@ -73,11 +77,24 @@ await new Promise((resolve) => setTimeout(() => resolve(), 3000))
 const categoryComposite = await createComposite(ceramic, './schemas/Category.graphql')
 const categoryModelID = categoryComposite.modelIDs[1]
 
+
+fs.writeFile('./schemas/Artist.graphql', `type Artist @createModel(accountRelation: LIST, description: "An Artist") {
+  name: String @string(maxLength: 100)
+}
+`, function (err) {
+  if (err) return console.log(err);
+  console.log('Artist schema created!');
+})
+
+await new Promise((resolve) => setTimeout(() => resolve(), 3000))
+const artistComposite = await createComposite(ceramic, './schemas/Artist.graphql')
+const artistModelID = artistComposite.modelIDs[0]
+
 // Create Piece graphql schema
 fs.writeFile('./schemas/Piece.graphql', `type Piece @createModel(accountRelation: LIST, description: "Piece of content") {
   name: String @string(maxLength: 100)
   CID: String @string(maxLength: 100)
-  details: Details
+  details: Details  
   metadata: Metadata!
 }
 
@@ -90,7 +107,6 @@ type Details {
   imageThumbnailCID: String @string(maxLength: 100)
   tags: String @string(maxLength: 100)
   musicBrainzID: String @string(maxLength: 100)
-  artistNames: String @string(maxLength: 100)
   albumTitle: String @string(maxLength: 100)
   initialReleaseYear: String @string(maxLength: 100)
   releaseType: String @string(maxLength: 100)
@@ -112,7 +128,10 @@ const pieceComposite = await createComposite(ceramic, './schemas/Piece.graphql')
 const pieceModelID = pieceComposite.modelIDs[0]
 
 // Create Pin graphql schema
-fs.writeFile('./schemas/Pin.graphql', `type Website @loadModel(id: "${websiteModelID}") {
+fs.writeFile('./schemas/Pin.graphql', `type Artist @loadModel(id: "${artistModelID}") {
+  id: ID!
+}
+type Website @loadModel(id: "${websiteModelID}") {
   id: ID!
 }
 
@@ -129,6 +148,8 @@ type Category @loadModel(id: "${categoryModelID}") {
 }
 
 type Pin @createModel(accountRelation: LIST, description: "A pin for a piece") {
+  artistID: StreamID! @documentReference(model: "Artist")
+  artist: Artist! @relationDocument(property: "artistID")
   websiteID: StreamID! @documentReference(model: "Website")
   website: Website! @relationDocument(property: "websiteID")
   ownerID: StreamID! @documentReference(model: "EthAccount")
@@ -148,7 +169,7 @@ type Pin @createModel(accountRelation: LIST, description: "A pin for a piece") {
 })
 await new Promise((resolve) => setTimeout(() => resolve(), 3000))
 const pinComposite = await createComposite(ceramic, './schemas/Pin.graphql')
-const pinModelID = pinComposite.modelIDs[4]
+const pinModelID = pinComposite.modelIDs[5]
 
 // Create PinLike graphql schema
 fs.writeFile('./schemas/PinLike.graphql', `type Pin @loadModel(id: "${pinModelID}") {
@@ -307,6 +328,11 @@ type PinDislike @loadModel(id: "${pinDislikeModelID}") {
   id: ID!
 }
 
+type Artist @loadModel(id: "${artistModelID}") {
+  pins: [Pin] @relationFrom(model: "Pin", property: "artistID")
+  pinsCount: Int! @relationCountFrom(model: "Pin", property: "artistID")
+}
+
 type Pin @loadModel(id: "${pinModelID}") {
   likes: [PinLike] @relationFrom(model: "PinLike", property: "pinID")
   likesCount: Int! @relationCountFrom(model: "PinLike", property: "pinID")
@@ -315,7 +341,7 @@ type Pin @loadModel(id: "${pinModelID}") {
 }
 
 type Category @loadModel(id: "${categoryModelID}") {
-  pins: [Piece] @relationFrom(model: "Pin", property: "categoryID")
+  pins: [Pin] @relationFrom(model: "Pin", property: "categoryID")
   pinsCount: Int! @relationCountFrom(model: "Pin", property: "categoryID")
   likes: [PinLike] @relationFrom(model: "PinLike", property: "categoryID")
   likesCount: Int! @relationCountFrom(model: "PinLike", property: "categoryID")
