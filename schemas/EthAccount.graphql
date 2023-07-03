@@ -7,8 +7,12 @@ type EthAccount @createModel(accountRelation: LIST, description: "An Ethereum Ac
   ensName: String @string(maxLength: 100)
   websiteID: StreamID! @documentReference(model: "Website")
   metadata: Metadata!
+  settings: Settings!
 }
 
+type Settings {
+  autoplay: Boolean!
+}
 type Metadata {
   createdAt: String! @string(maxLength: 100)
   updatedAt: String! @string(maxLength: 100)

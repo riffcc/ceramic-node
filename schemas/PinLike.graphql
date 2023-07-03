@@ -1,8 +1,8 @@
-type Pin @loadModel(id: "kjzl6hvfrbw6caf3sn3ykb0jpxs34rc6bod8dpn7ti6fygbovxrm7m7kpbmmeal") {
+type Pin @loadModel(id: "kjzl6hvfrbw6c8hemzan3c0bdwka10ezqalv1j18dm6b0pkt9crig2b0cpdj3az") {
   id: ID!
 }
 
-type EthAccount @loadModel(id: "kjzl6hvfrbw6c9i1xror5us4krzm1xp3ufzj9tz0byu164kaihrs13b2dpg69zs") {
+type EthAccount @loadModel(id: "kjzl6hvfrbw6c6rwv5wk81hkhmdezy89bb90nz9o41wqw87xabterzgm8imb30l") {
   id: ID!
 }
 

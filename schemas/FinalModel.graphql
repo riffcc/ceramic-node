@@ -1,20 +1,25 @@
-type Admin @loadModel(id: "kjzl6hvfrbw6cad3hysntm7kwr4n5ykjmbkedzsqjhzfeao60osho9rb21rx6dz") {
+type Admin @loadModel(id: "kjzl6hvfrbw6c9m54j0br516x9qni301svyu6onzxbsifcjusuzwhh6kgdrkigl") {
   id: ID!
 }
 
-type Piece @loadModel(id: "kjzl6hvfrbw6cahnukjgrt7bs4ax4zhb4hmq1yvl5awyzs00g3ykw4nzhqgbtza") {
+type Piece @loadModel(id: "kjzl6hvfrbw6c9ks4j3t143lynpqd0rcdvv9qz887k329mnkyhebil9xsvqsqmb") {
   id: ID!
 }
 
-type PinLike @loadModel(id: "kjzl6hvfrbw6c6vpwyt7kit5ff39bl3wylnrtiseuz07im6pxhlj047txdmm5zi") {
+type PinLike @loadModel(id: "kjzl6hvfrbw6c8lk6odvtq2iw1bzq0zt0lbtcf0x4yj6bbrtfr7g8ct80mtnjqy") {
   id: ID!
 }
 
-type PinDislike @loadModel(id: "kjzl6hvfrbw6c91mdlheqfhwidge17pw9evvq50qnqjk94eyxm6ylk9zjea1ooy") {
+type PinDislike @loadModel(id: "kjzl6hvfrbw6ca97ehex06zmkkwllyljemkrfgk6rpnqucs1yn6eo8dywc9s82i") {
   id: ID!
 }
 
-type Pin @loadModel(id: "kjzl6hvfrbw6caf3sn3ykb0jpxs34rc6bod8dpn7ti6fygbovxrm7m7kpbmmeal") {
+type Artist @loadModel(id: "kjzl6hvfrbw6c8ovhe8v7kk89n5uplrh3v19tnkckl1rvd3fp229l11jho9gqum") {
+  pins: [Pin] @relationFrom(model: "Pin", property: "artistID")
+  pinsCount: Int! @relationCountFrom(model: "Pin", property: "artistID")
+}
+
+type Pin @loadModel(id: "kjzl6hvfrbw6c8hemzan3c0bdwka10ezqalv1j18dm6b0pkt9crig2b0cpdj3az") {
   likes: [PinLike] @relationFrom(model: "PinLike", property: "pinID")
   likesCount: Int! @relationCountFrom(model: "PinLike", property: "pinID")
   dislikes: [PinDislike] @relationFrom(model: "PinDislike", property: "pinID")
@@ -22,7 +27,7 @@ type Pin @loadModel(id: "kjzl6hvfrbw6caf3sn3ykb0jpxs34rc6bod8dpn7ti6fygbovxrm7m7
 }
 
 type Category @loadModel(id: "kjzl6hvfrbw6c8yy6avq6svy30fwtlvjygkhkknt7ndd2ryyio8xhxx4pb5g4nh") {
-  pins: [Piece] @relationFrom(model: "Pin", property: "categoryID")
+  pins: [Pin] @relationFrom(model: "Pin", property: "categoryID")
   pinsCount: Int! @relationCountFrom(model: "Pin", property: "categoryID")
   likes: [PinLike] @relationFrom(model: "PinLike", property: "categoryID")
   likesCount: Int! @relationCountFrom(model: "PinLike", property: "categoryID")
@@ -34,11 +39,11 @@ type Subscription @loadModel(id: "kjzl6hvfrbw6c56ctk0dpd3uqcx77dqjpgti4uthnj2wez
   id: ID!
 }
 
-type Featured @loadModel(id: "kjzl6hvfrbw6caou7c53p0nbsj9xic41lh09qel2xyudp1f4n59fs1qewp78y1q") {
+type Featured @loadModel(id: "kjzl6hvfrbw6c9to4ad9dqh45v5rlizmv11j6bvwwpyrj1te3ykfabu5wpsj916") {
   id: ID!
 }
 
-type EthAccount @loadModel(id: "kjzl6hvfrbw6c9i1xror5us4krzm1xp3ufzj9tz0byu164kaihrs13b2dpg69zs") {
+type EthAccount @loadModel(id: "kjzl6hvfrbw6c6rwv5wk81hkhmdezy89bb90nz9o41wqw87xabterzgm8imb30l") {
   pins: [Pin] @relationFrom(model: "Pin", property: "ownerID")
   pinsCount: Int! @relationCountFrom(model: "Pin", property: "ownerID")
   managedWebsites: [Admin] @relationFrom(model: "Admin", property: "adminID")

@@ -1,7 +1,7 @@
 type Piece @createModel(accountRelation: LIST, description: "Piece of content") {
   name: String @string(maxLength: 100)
   CID: String @string(maxLength: 100)
-  details: Details
+  details: Details  
   metadata: Metadata!
 }
 
@@ -14,7 +14,6 @@ type Details {
   imageThumbnailCID: String @string(maxLength: 100)
   tags: String @string(maxLength: 100)
   musicBrainzID: String @string(maxLength: 100)
-  artistNames: String @string(maxLength: 100)
   albumTitle: String @string(maxLength: 100)
   initialReleaseYear: String @string(maxLength: 100)
   releaseType: String @string(maxLength: 100)

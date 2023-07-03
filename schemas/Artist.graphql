@@ -1,0 +1,3 @@
+type Artist @createModel(accountRelation: LIST, description: "An Artist") {
+  name: String @string(maxLength: 100)
+}

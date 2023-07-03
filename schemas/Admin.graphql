@@ -2,7 +2,7 @@ type Website @loadModel(id: "kjzl6hvfrbw6c79umg416zn1u52s57rhmmyivi4sz019znaoysj
   id: ID!
 }
 
-type EthAccount @loadModel(id: "kjzl6hvfrbw6c9i1xror5us4krzm1xp3ufzj9tz0byu164kaihrs13b2dpg69zs") {
+type EthAccount @loadModel(id: "kjzl6hvfrbw6c6rwv5wk81hkhmdezy89bb90nz9o41wqw87xabterzgm8imb30l") {
   id: ID!
 }
 

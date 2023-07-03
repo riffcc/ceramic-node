@@ -1,12 +1,15 @@
+type Artist @loadModel(id: "kjzl6hvfrbw6c8ovhe8v7kk89n5uplrh3v19tnkckl1rvd3fp229l11jho9gqum") {
+  id: ID!
+}
 type Website @loadModel(id: "kjzl6hvfrbw6c79umg416zn1u52s57rhmmyivi4sz019znaoysjufo5cjafp4fq") {
   id: ID!
 }
 
-type EthAccount @loadModel(id: "kjzl6hvfrbw6c9i1xror5us4krzm1xp3ufzj9tz0byu164kaihrs13b2dpg69zs") {
+type EthAccount @loadModel(id: "kjzl6hvfrbw6c6rwv5wk81hkhmdezy89bb90nz9o41wqw87xabterzgm8imb30l") {
   id: ID!
 }
 
-type Piece @loadModel(id: "kjzl6hvfrbw6cahnukjgrt7bs4ax4zhb4hmq1yvl5awyzs00g3ykw4nzhqgbtza") {
+type Piece @loadModel(id: "kjzl6hvfrbw6c9ks4j3t143lynpqd0rcdvv9qz887k329mnkyhebil9xsvqsqmb") {
   id: ID!
 }
 
@@ -15,6 +18,8 @@ type Category @loadModel(id: "kjzl6hvfrbw6c8yy6avq6svy30fwtlvjygkhkknt7ndd2ryyio
 }
 
 type Pin @createModel(accountRelation: LIST, description: "A pin for a piece") {
+  artistID: StreamID! @documentReference(model: "Artist")
+  artist: Artist! @relationDocument(property: "artistID")
   websiteID: StreamID! @documentReference(model: "Website")
   website: Website! @relationDocument(property: "websiteID")
   ownerID: StreamID! @documentReference(model: "EthAccount")
