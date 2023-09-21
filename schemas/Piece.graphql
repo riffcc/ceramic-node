@@ -1,13 +1,9 @@
 type Piece @createModel(accountRelation: LIST, description: "Piece of content") {
   name: String @string(maxLength: 100)
-  CID: String @string(maxLength: 100)
+  cid: String @string(maxLength: 100)
   details: Details  
-  metadata: Metadata!
-}
-
-type Metadata {
-  createdAt: String! @string(maxLength: 100)
-  updatedAt: String! @string(maxLength: 100)
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Details {

@@ -1,23 +1,28 @@
 type Artist @loadModel(id: "kjzl6hvfrbw6c8ovhe8v7kk89n5uplrh3v19tnkckl1rvd3fp229l11jho9gqum") {
   id: ID!
 }
-type Website @loadModel(id: "kjzl6hvfrbw6c79umg416zn1u52s57rhmmyivi4sz019znaoysjufo5cjafp4fq") {
+type Website @loadModel(id: "kjzl6hvfrbw6c6krz7wzgvo2opqdhb12yv9vy0y5qid5vnvyz8m28jsqywnf52j") {
   id: ID!
 }
 
-type EthAccount @loadModel(id: "kjzl6hvfrbw6c6rwv5wk81hkhmdezy89bb90nz9o41wqw87xabterzgm8imb30l") {
+type EthAccount @loadModel(id: "kjzl6hvfrbw6c9o0a06ho52sn10qkhmfq9lu1hw6f43osnwdsfaenhnstldp3dx") {
   id: ID!
 }
 
-type Piece @loadModel(id: "kjzl6hvfrbw6c9ks4j3t143lynpqd0rcdvv9qz887k329mnkyhebil9xsvqsqmb") {
+type Piece @loadModel(id: "kjzl6hvfrbw6c6e5zp51s0dxrlhuvdxxv9biz4wfmatupsnwba6mvbelt8fv5i9") {
   id: ID!
 }
 
-type Category @loadModel(id: "kjzl6hvfrbw6c8yy6avq6svy30fwtlvjygkhkknt7ndd2ryyio8xhxx4pb5g4nh") {
+type Category @loadModel(id: "kjzl6hvfrbw6caxcvuwefv8cc8m4i98p4x7ufmqixsh5hbkuk70aat7t8zwo5pz") {
   id: ID!
 }
 
-type Pin @createModel(accountRelation: LIST, description: "A pin for a piece") {
+type Pin @createModel(accountRelation: LIST, description: "A pin for a piece") 
+@createIndex(fields: [{path: "artistID"}])
+@createIndex(fields: [{path: "websiteID"}])
+@createIndex(fields: [{path: "categoryID"}])
+@createIndex(fields: [{path: "ownerID"}])
+{
   artistID: StreamID! @documentReference(model: "Artist")
   artist: Artist! @relationDocument(property: "artistID")
   websiteID: StreamID! @documentReference(model: "Website")

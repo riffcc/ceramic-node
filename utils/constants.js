@@ -10,6 +10,7 @@ export const CREATE_ETH_ACCOUNT = `
     }
   }
 `;
+
 export const UPDATE_ETH_ACCOUNT = `
   mutation UpdateEthAccount($input: UpdateEthAccountInput!) {
     updateEthAccount(input: $input) {
@@ -19,27 +20,18 @@ export const UPDATE_ETH_ACCOUNT = `
     }
   }
 `;
+
 export const CREATE_WEBSITE = `
   mutation CreateWebsite($input: CreateWebsiteInput!) {
       createWebsite(input: $input) {
 				document {
 					id
-					websiteName
+					name
 				}
     }
   }
 `;
-export const CREATE_ADMIN = `
-  mutation CreateAdmin($input: CreateAdminInput!) {
-    createAdmin(input: $input) {
-      document {
-        id
-        adminID
-        websiteID
-      }
-    }
-  }
-`;
+
 export const CREATE_PIECE = `
   mutation CreatePiece($input: CreatePieceInput!) {
     createPiece(input: $input) {

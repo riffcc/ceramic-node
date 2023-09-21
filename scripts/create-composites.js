@@ -12,16 +12,14 @@ const ceramic = createCeramicClient(did)
 console.log("Create schemas and composites...")
 
 // Create Website graphql schema
-fs.writeFile('./schemas/Website.graphql', `type Website @createModel(accountRelation: LIST, description: "A Website") {
-  websiteName: String! @string(maxLength: 50)
+fs.writeFile('./schemas/Website.graphql', `type Website @createModel(accountRelation: LIST, description: "A Website")
+@createIndex(fields: [{path: "name"}])
+{
+  name: String! @string(maxLength: 50)
   description: String @string(maxLength: 150)
   image: String @string(maxLength: 100)
-  metadata: Metadata!
-}
-
-type Metadata {
-  createdAt: String! @string(maxLength: 100)
-  updatedAt: String! @string(maxLength: 100)
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 `, function (err) {
   if (err) return console.log(err);
@@ -36,21 +34,22 @@ fs.writeFile('./schemas/EthAccount.graphql', `type Website @loadModel(id: "${web
   id: ID!
 }
 
-type EthAccount @createModel(accountRelation: LIST, description: "An Ethereum Account") {
+type EthAccount @createModel(accountRelation: LIST, description: "An Ethereum Account") 
+@createIndex(fields: [{path: "address"}])
+{
   address: String! @string(maxLength: 66)
-  ensName: String @string(maxLength: 100)
   websiteID: StreamID! @documentReference(model: "Website")
-  metadata: Metadata!
+  isAdmin: Boolean!
+  isSuperAdmin: Boolean!
   settings: Settings!
+  createdAt: String! @string(maxLength: 100)
+  updatedAt: String! @string(maxLength: 100)
 }
 
 type Settings {
   autoplay: Boolean!
 }
-type Metadata {
-  createdAt: String! @string(maxLength: 100)
-  updatedAt: String! @string(maxLength: 100)
-}
+
 `, function (err) {
   if (err) return console.log(err);
   console.log('EthAccount schema created!');
@@ -64,7 +63,9 @@ fs.writeFile('./schemas/Category.graphql', `type Website @loadModel(id: "${websi
   id: ID!
 }
 
-type Category @createModel(accountRelation: LIST, description: "A category") {
+type Category @createModel(accountRelation: LIST, description: "A category") 
+@createIndex(fields: [{path: "name"}])
+{
   websiteID: StreamID! @documentReference(model: "Website")
   website: Website @relationDocument(property: "websiteID")
   name: String! @string(maxLength:100)
@@ -78,7 +79,9 @@ const categoryComposite = await createComposite(ceramic, './schemas/Category.gra
 const categoryModelID = categoryComposite.modelIDs[1]
 
 
-fs.writeFile('./schemas/Artist.graphql', `type Artist @createModel(accountRelation: LIST, description: "An Artist") {
+fs.writeFile('./schemas/Artist.graphql', `type Artist @createModel(accountRelation: LIST, description: "An Artist") 
+@createIndex(fields: [{path: "name"}])
+{
   name: String @string(maxLength: 100)
 }
 `, function (err) {
@@ -93,14 +96,10 @@ const artistModelID = artistComposite.modelIDs[0]
 // Create Piece graphql schema
 fs.writeFile('./schemas/Piece.graphql', `type Piece @createModel(accountRelation: LIST, description: "Piece of content") {
   name: String @string(maxLength: 100)
-  CID: String @string(maxLength: 100)
+  cid: String @string(maxLength: 100)
   details: Details  
-  metadata: Metadata!
-}
-
-type Metadata {
-  createdAt: String! @string(maxLength: 100)
-  updatedAt: String! @string(maxLength: 100)
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Details {
@@ -147,7 +146,12 @@ type Category @loadModel(id: "${categoryModelID}") {
   id: ID!
 }
 
-type Pin @createModel(accountRelation: LIST, description: "A pin for a piece") {
+type Pin @createModel(accountRelation: LIST, description: "A pin for a piece") 
+@createIndex(fields: [{path: "artistID"}])
+@createIndex(fields: [{path: "websiteID"}])
+@createIndex(fields: [{path: "categoryID"}])
+@createIndex(fields: [{path: "ownerID"}])
+{
   artistID: StreamID! @documentReference(model: "Artist")
   artist: Artist! @relationDocument(property: "artistID")
   websiteID: StreamID! @documentReference(model: "Website")
@@ -243,8 +247,8 @@ type Featured @createModel(accountRelation: LIST, description: "A featured conte
   website: Website! @relationDocument(property: "websiteID")
 	pinID: StreamID! @documentReference(model: "Pin")
 	pin: Pin! @relationDocument(property: "pinID")
-  startAt: String! @string(maxLength:100)
-  endAt: String! @string(maxLength:100)
+  startAt: DateTime!
+  endAt: DateTime!
 }
 `, function (err) {
   if (err) return console.log(err);
@@ -253,37 +257,6 @@ type Featured @createModel(accountRelation: LIST, description: "A featured conte
 await new Promise((resolve) => setTimeout(() => resolve(), 3000))
 const featuredComposite = await createComposite(ceramic, './schemas/Featured.graphql')
 const featuredModelID = featuredComposite.modelIDs[2]
-
-// Create Admin graphql schema
-fs.writeFile('./schemas/Admin.graphql', `type Website @loadModel(id: "${websiteModelID}") {
-  id: ID!
-}
-
-type EthAccount @loadModel(id: "${ethAccountModelID}") {
-  id: ID!
-}
-
-type Admin @createModel(accountRelation: LIST, description: "Admin Website") {
-  websiteID: StreamID! @documentReference(model: "Website")
-  website: Website! @relationDocument(property: "websiteID")
-	adminID: StreamID! @documentReference(model: "EthAccount")
-	admin: EthAccount! @relationDocument(property: "adminID")
-  super: Boolean!
-  inactive: Boolean
-  metadata: Metadata!
-}
-
-type Metadata {
-  createdAt: String! @string(maxLength:100)
-  updatedAt: String! @string(maxLength:100)
-}
-`, function (err) {
-  if (err) return console.log(err);
-  console.log('Admin schema created!');
-})
-await new Promise((resolve) => setTimeout(() => resolve(), 3000))
-const adminComposite = await createComposite(ceramic, './schemas/Admin.graphql')
-const adminModelID = adminComposite.modelIDs[2]
 
 // Create Subscription graphql schema
 fs.writeFile('./schemas/Subscription.graphql', `type Website @loadModel(id: "${websiteModelID}") {
@@ -296,12 +269,8 @@ type Subscription @createModel(accountRelation: LIST, description: "Subcription 
 	subscribedID: StreamID! @documentReference(model: "Website")
 	subscribedWebsite: Website! @relationDocument(property: "subscribedID")
 	inactive: Boolean
-  metadata: Metadata!
-}
-
-type Metadata {
-  createdAt: String! @string(maxLength:100)
-  updatedAt: String! @string(maxLength:100)
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 `, function (err) {
   if (err) return console.log(err);
@@ -312,11 +281,7 @@ const subscriptionComposite = await createComposite(ceramic, './schemas/Subscrip
 const subscriptionModelID = subscriptionComposite.modelIDs[1]
 
 // Create FinalModel graphql schema
-fs.writeFile('./schemas/FinalModel.graphql', `type Admin @loadModel(id: "${adminModelID}") {
-  id: ID!
-}
-
-type Piece @loadModel(id: "${pieceModelID}") {
+fs.writeFile('./schemas/FinalModel.graphql', `type Piece @loadModel(id: "${pieceModelID}") {
   id: ID!
 }
 
@@ -360,8 +325,6 @@ type Featured @loadModel(id: "${featuredModelID}") {
 type EthAccount @loadModel(id: "${ethAccountModelID}") {
   pins: [Pin] @relationFrom(model: "Pin", property: "ownerID")
   pinsCount: Int! @relationCountFrom(model: "Pin", property: "ownerID")
-  managedWebsites: [Admin] @relationFrom(model: "Admin", property: "adminID")
-  managedWebsitesCount: Int! @relationCountFrom(model: "Admin", property: "adminID")
   pinLikes: [PinLike] @relationFrom(model: "PinLike", property: "ownerID")
   pinLikesCount: Int! @relationCountFrom(model: "PinLike", property: "ownerID")
   pinDislikes: [PinDislike] @relationFrom(model: "PinDislike", property: "ownerID")
@@ -377,8 +340,6 @@ type Website @loadModel(id: "${websiteModelID}") {
   featuredCount: Int! @relationCountFrom(model: "Featured", property: "websiteID")
   subscriptions: [Subscription] @relationFrom(model: "Subscription", property: "websiteID")
   subscriptionsCount: Int! @relationCountFrom(model: "Subscription", property: "websiteID")
-  admins: [Admin] @relationFrom(model: "Admin", property: "websiteID")
-  adminsCount: Int! @relationCountFrom(model: "Admin", property: "websiteID")
   users: [EthAccount] @relationFrom(model: "EthAccount", property: "websiteID")
   usersCount: Int! @relationCountFrom(model: "EthAccount", property: "websiteID")
 }
@@ -386,6 +347,7 @@ type Website @loadModel(id: "${websiteModelID}") {
   if (err) return console.log(err);
   console.log('FinalModel schema created!');
 })
+
 await new Promise((resolve) => setTimeout(() => resolve(), 3000))
 const mergedComposite = await createComposite(ceramic, './schemas/FinalModel.graphql')
 
