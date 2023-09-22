@@ -42,10 +42,7 @@ app.post('/account', async (req, res) => {
     if (action === 'create') {
       const input = {
         content: {
-          ...accountData,
-          settings: {
-            autoplay: true
-          }
+          ...accountData
         }
       }
       const result = await compose.executeQuery(CREATE_ETH_ACCOUNT, {
