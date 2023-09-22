@@ -1,11 +1,10 @@
 export const CREATE_ETH_ACCOUNT = `
-  mutation CreateEthAccount($input: CreateEthAccountInput!) {
+ mutation CreateEthAccount($input: CreateEthAccountInput!) {
     createEthAccount(input: $input) {
         document {
         id
         websiteID
         address
-        ensName
       }
     }
   }
@@ -20,6 +19,23 @@ export const UPDATE_ETH_ACCOUNT = `
     }
   }
 `;
+
+export const GET_ETH_ACCOUNT = `
+query EthAccountQuery($filters: EthAccountFiltersInput) {
+  ethAccountIndex(first: 10, filters: $filters) {
+    edges {
+      node {
+        id
+        address
+        isAdmin
+        isSuperAdmin
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}
+`
 
 export const CREATE_WEBSITE = `
   mutation CreateWebsite($input: CreateWebsiteInput!) {
