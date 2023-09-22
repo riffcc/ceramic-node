@@ -1,4 +1,5 @@
-type Website @createModel(accountRelation: LIST, description: "A Website")
+type Website
+@createModel(accountRelation: LIST, description: "A Website")
 @createIndex(fields: [{path: "name"}])
 {
   name: String! @string(maxLength: 50)

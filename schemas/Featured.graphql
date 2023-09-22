@@ -1,12 +1,18 @@
-type Website @loadModel(id: "kjzl6hvfrbw6c6krz7wzgvo2opqdhb12yv9vy0y5qid5vnvyz8m28jsqywnf52j") {
+type Website
+@loadModel(id: "kjzl6hvfrbw6c6krz7wzgvo2opqdhb12yv9vy0y5qid5vnvyz8m28jsqywnf52j")
+{
   id: ID!
 }
 
-type Pin @loadModel(id: "kjzl6hvfrbw6c7a1l0zo3947d5y2t302v6urrm4yh8xx39uso9v8h211x9t8mkp") {
+type Pin
+@loadModel(id: "kjzl6hvfrbw6c7a1l0zo3947d5y2t302v6urrm4yh8xx39uso9v8h211x9t8mkp")
+{
   id: ID!
 }
 
-type Featured @createModel(accountRelation: LIST, description: "A featured content") {
+type Featured
+@createModel(accountRelation: LIST, description: "A featured content")
+{
   websiteID: StreamID! @documentReference(model: "Website")
   website: Website! @relationDocument(property: "websiteID")
 	pinID: StreamID! @documentReference(model: "Pin")

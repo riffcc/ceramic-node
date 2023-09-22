@@ -1,8 +1,12 @@
-type Website @loadModel(id: "kjzl6hvfrbw6c6krz7wzgvo2opqdhb12yv9vy0y5qid5vnvyz8m28jsqywnf52j") {
+type Website
+@loadModel(id: "kjzl6hvfrbw6c6krz7wzgvo2opqdhb12yv9vy0y5qid5vnvyz8m28jsqywnf52j")
+{
   id: ID!
 }
 
-type Subscription @createModel(accountRelation: LIST, description: "Subcription Website") {
+type Subscription
+@createModel(accountRelation: LIST, description: "Subcription Website")
+{
   websiteID: StreamID! @documentReference(model: "Website")
   website: Website! @relationDocument(property: "websiteID")
 	subscribedID: StreamID! @documentReference(model: "Website")

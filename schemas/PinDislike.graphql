@@ -1,16 +1,24 @@
-type Pin @loadModel(id: "kjzl6hvfrbw6c7a1l0zo3947d5y2t302v6urrm4yh8xx39uso9v8h211x9t8mkp") {
+type Pin
+@loadModel(id: "kjzl6hvfrbw6c7a1l0zo3947d5y2t302v6urrm4yh8xx39uso9v8h211x9t8mkp")
+{
   id: ID!
 }
 
-type EthAccount @loadModel(id: "kjzl6hvfrbw6c9o0a06ho52sn10qkhmfq9lu1hw6f43osnwdsfaenhnstldp3dx") {
+type EthAccount
+@loadModel(id: "kjzl6hvfrbw6c9o0a06ho52sn10qkhmfq9lu1hw6f43osnwdsfaenhnstldp3dx")
+{
   id: ID!
 }
 
-type Category @loadModel(id: "kjzl6hvfrbw6caxcvuwefv8cc8m4i98p4x7ufmqixsh5hbkuk70aat7t8zwo5pz") {
+type Category
+@loadModel(id: "kjzl6hvfrbw6caxcvuwefv8cc8m4i98p4x7ufmqixsh5hbkuk70aat7t8zwo5pz")
+{
   id: ID!
 }
 
-type PinDislike @createModel(accountRelation: LIST, description: "A like for a pin") {
+type PinDislike
+@createModel(accountRelation: LIST, description: "A like for a pin")
+{
 	pinID: StreamID! @documentReference(model: "Pin")
 	pin: Pin! @relationDocument(property: "pinID")
 	categoryID: StreamID! @documentReference(model: "Category")

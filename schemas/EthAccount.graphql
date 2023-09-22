@@ -1,8 +1,10 @@
-type Website @loadModel(id: "kjzl6hvfrbw6c6krz7wzgvo2opqdhb12yv9vy0y5qid5vnvyz8m28jsqywnf52j") {
+type Website
+@loadModel(id: "kjzl6hvfrbw6c6krz7wzgvo2opqdhb12yv9vy0y5qid5vnvyz8m28jsqywnf52j") {
   id: ID!
 }
 
-type EthAccount @createModel(accountRelation: LIST, description: "An Ethereum Account") 
+type EthAccount
+@createModel(accountRelation: LIST, description: "An Ethereum Account")
 @createIndex(fields: [{path: "address"}])
 {
   address: String! @string(maxLength: 66)
@@ -17,4 +19,3 @@ type EthAccount @createModel(accountRelation: LIST, description: "An Ethereum Ac
 type Settings {
   autoplay: Boolean!
 }
-

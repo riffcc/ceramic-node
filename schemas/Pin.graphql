@@ -1,6 +1,8 @@
-type Artist @loadModel(id: "kjzl6hvfrbw6c8ovhe8v7kk89n5uplrh3v19tnkckl1rvd3fp229l11jho9gqum") {
+type Artist
+@loadModel(id: "kjzl6hvfrbw6c8ovhe8v7kk89n5uplrh3v19tnkckl1rvd3fp229l11jho9gqum") {
   id: ID!
 }
+
 type Website @loadModel(id: "kjzl6hvfrbw6c6krz7wzgvo2opqdhb12yv9vy0y5qid5vnvyz8m28jsqywnf52j") {
   id: ID!
 }
@@ -17,7 +19,8 @@ type Category @loadModel(id: "kjzl6hvfrbw6caxcvuwefv8cc8m4i98p4x7ufmqixsh5hbkuk7
   id: ID!
 }
 
-type Pin @createModel(accountRelation: LIST, description: "A pin for a piece") 
+type Pin
+@createModel(accountRelation: LIST, description: "A pin for a piece")
 @createIndex(fields: [{path: "artistID"}])
 @createIndex(fields: [{path: "websiteID"}])
 @createIndex(fields: [{path: "categoryID"}])

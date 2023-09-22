@@ -1,4 +1,5 @@
-type Piece @createModel(accountRelation: LIST, description: "Piece of content") {
+type Piece
+@createModel(accountRelation: LIST, description: "Piece of content") {
   name: String @string(maxLength: 100)
   cid: String @string(maxLength: 100)
   details: Details  
