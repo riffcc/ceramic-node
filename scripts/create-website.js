@@ -3,9 +3,10 @@ dotenv.config()
 import { createInterface } from "readline";
 import {
   CREATE_ETH_ACCOUNT,
-  CREATE_WEBSITE,
+  CREATE_SITE,
   CREATE_CATEGORY,
-  pieceCategories
+  pieceCategories,
+  defaultThemeColors
 } from '../utils/constants.js'
 import createComposeClient from '../utils/createComposeClient.js';
 
@@ -24,40 +25,47 @@ const readLineAsync = msg => {
   });
 }
 
-console.log("Create a new website...")
+console.log("Create a new site...")
 const name = await readLineAsync("Name (required): ")
 const description = await readLineAsync("Description: ")
 const image = await readLineAsync("Image IPFS CID: ")
 readline.close()
-// Create websites
+// Create sites
 
-const { data: websiteData } = await compose.executeQuery(CREATE_WEBSITE, {
+
+
+const createSiteMutationInput = {
   input: {
     content: {
-      name: name ?? 'Test Website',
+      name: name ?? 'Test Site',
       description,
       image,
+      colors: defaultThemeColors,
       createdAt: (new Date).toISOString(),
       updatedAt: (new Date).toISOString()
     }
   }
-})
+}
+const createSiteResult = await compose.executeQuery(CREATE_SITE, createSiteMutationInput)
 
-const website = websiteData?.createWebsite?.document
+if (!createSiteResult.data?.createSite) {
+  throw new Error(JSON.stringify(createSiteResult.errors))
+}
+const site = createSiteResult.data.createSite.document
 
 // Create admin eth account
-
 await compose.executeQuery(CREATE_ETH_ACCOUNT, {
   input: {
     content: {
       address: process.env.ADMIN_ETH_ADDRESS,
-      websiteID: website.id,
+      siteID: site.id,
       isAdmin: true,
       isSuperAdmin: true,
       createdAt: (new Date).toISOString(),
       updatedAt: (new Date).toISOString(),
       settings: {
-        autoplay: true
+        autoplay: true,
+        cidAvatar: "bafkreiabq32njxa4t7e73losqj2s4cswwk4f67psbcf2gx7q62xuobntc4"
       }
     }
   }
@@ -67,7 +75,7 @@ const promises = pieceCategories.map((category) => {
   return compose.executeQuery(CREATE_CATEGORY, {
     input: {
       content: {
-        websiteID: website.id,
+        siteID: site.id,
         name: category
       }
     }
@@ -76,7 +84,7 @@ const promises = pieceCategories.map((category) => {
 
 await Promise.all(promises)
 
-console.log(`Your site has been created successfully!\nname: ${website.name}\nsite_id: ${website.id}`)
+console.log(`Your site has been created successfully!\nname: ${site.name}\nsite_id: ${site.id}`)
 
 
 

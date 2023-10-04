@@ -19,59 +19,86 @@ const ceramic = createCeramicClient(did)
 console.log("Create schemas and composites...")
 
 await writeSchema(
-  'Website',
-  `type Website
-@createModel(accountRelation: LIST, description: "A Website")
+  'Site',
+  `type Site
+@createModel(accountRelation: LIST, description: "A Site")
 @createIndex(fields: [{path: "name"}])
 {
   name: String! @string(maxLength: 50)
   description: String @string(maxLength: 150)
   image: String @string(maxLength: 100)
+  colors: Colors
   createdAt: DateTime!
   updatedAt: DateTime!
-}`)
-const websiteComposite = await createComposite(ceramic, './schemas/Website.graphql')
-const websiteModelID = websiteComposite.modelIDs[0]
+}
+
+type Colors {
+  background: String @string(maxLength: 10)
+  background_lighten_1: String @string(maxLength: 10)
+  background_lighten_2: String @string(maxLength: 10)
+  background_darken_1: String @string(maxLength: 10)
+  background_darken_2: String @string(maxLength: 10)
+  primary: String @string(maxLength: 10)
+  primary_lighten_1: String @string(maxLength: 10)
+  primary_darken_1: String @string(maxLength: 10)
+  secondary: String @string(maxLength: 10)
+  secondary_lighten_1: String @string(maxLength: 10)
+  secondary_darken_1: String @string(maxLength: 10)
+  surface: String @string(maxLength: 10)
+  error: String @string(maxLength: 10)
+  info: String @string(maxLength: 10)
+  success: String @string(maxLength: 10)
+  warning: String @string(maxLength: 10)
+}
+`)
+const siteComposite = await createComposite(ceramic, './schemas/Site.graphql')
+const siteModelID = siteComposite.modelIDs[0]
 
 await writeSchema(
   'EthAccount',
-  `type Website
-@loadModel(id: "${websiteModelID}") {
+  `type Site
+@loadModel(id: "${siteModelID}") {
   id: ID!
+}
+
+type Settings {
+  cidAvatar: String @string(maxLength: 100)
+  autoplay: Boolean!
 }
 
 type EthAccount
 @createModel(accountRelation: LIST, description: "An Ethereum Account")
+@createIndex(fields: [{path: "siteID"}])
 @createIndex(fields: [{path: "address"}])
+@createIndex(fields: [{path: "isAdmin"}])
+@createIndex(fields: [{path: "isSuperAdmin"}])
 {
   address: String! @string(maxLength: 66)
-  websiteID: StreamID! @documentReference(model: "Website")
+  siteID: StreamID! @documentReference(model: "Site")
+  site: Site! @relationDocument(property: "siteID")
   isAdmin: Boolean!
   isSuperAdmin: Boolean!
   settings: Settings!
   createdAt: String! @string(maxLength: 100)
   updatedAt: String! @string(maxLength: 100)
-}
-
-type Settings {
-  autoplay: Boolean!
 }`)
 const ethAccountComposite = await createComposite(ceramic, './schemas/EthAccount.graphql')
 const ethAccountModelID = ethAccountComposite.modelIDs[1]
 
 await writeSchema(
   'Category',
-  `type Website
-@loadModel(id: "${websiteModelID}") {
+  `type Site
+@loadModel(id: "${siteModelID}") {
   id: ID!
 }
 
 type Category
 @createModel(accountRelation: LIST, description: "A category")
+@createIndex(fields: [{path: "siteID"}])
 @createIndex(fields: [{path: "name"}])
 {
-  websiteID: StreamID! @documentReference(model: "Website")
-  website: Website @relationDocument(property: "websiteID")
+  siteID: StreamID! @documentReference(model: "Site")
+  site: Site! @relationDocument(property: "siteID")
   name: String! @string(maxLength:100)
 }`)
 const categoryComposite = await createComposite(ceramic, './schemas/Category.graphql')
@@ -83,7 +110,7 @@ await writeSchema(
 @createModel(accountRelation: LIST, description: "An Artist")
 @createIndex(fields: [{path: "name"}])
 {
-  name: String @string(maxLength: 100)
+  name: String! @string(maxLength: 100)
 }`)
 const artistComposite = await createComposite(ceramic, './schemas/Artist.graphql')
 const artistModelID = artistComposite.modelIDs[0]
@@ -91,16 +118,18 @@ const artistModelID = artistComposite.modelIDs[0]
 await writeSchema(
   'Piece',
   `type Piece
-@createModel(accountRelation: LIST, description: "Piece of content") {
-  name: String @string(maxLength: 100)
-  cid: String @string(maxLength: 100)
+@createModel(accountRelation: LIST, description: "Piece of content")
+@createIndex(fields: [{path: "createdAt"}])
+{
+  name: String! @string(maxLength: 100)
+  contentCid: String! @string(maxLength: 100)
   details: Details  
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
 type Details {
-  imageThumbnailCID: String @string(maxLength: 100)
+  thumbnailCid: String @string(maxLength: 100)
   tags: String @string(maxLength: 100)
   musicBrainzID: String @string(maxLength: 100)
   albumTitle: String @string(maxLength: 100)
@@ -125,7 +154,7 @@ await writeSchema(
   id: ID!
 }
 
-type Website @loadModel(id: "${websiteModelID}") {
+type Site @loadModel(id: "${siteModelID}") {
   id: ID!
 }
 
@@ -144,14 +173,17 @@ type Category @loadModel(id: "${categoryModelID}") {
 type Pin
 @createModel(accountRelation: LIST, description: "A pin for a piece")
 @createIndex(fields: [{path: "artistID"}])
-@createIndex(fields: [{path: "websiteID"}])
+@createIndex(fields: [{path: "siteID"}])
 @createIndex(fields: [{path: "categoryID"}])
 @createIndex(fields: [{path: "ownerID"}])
+@createIndex(fields: [{path: "approved"}])
+@createIndex(fields: [{path: "rejected"}])
+@createIndex(fields: [{path: "deleted"}])
 {
   artistID: StreamID! @documentReference(model: "Artist")
   artist: Artist! @relationDocument(property: "artistID")
-  websiteID: StreamID! @documentReference(model: "Website")
-  website: Website! @relationDocument(property: "websiteID")
+  siteID: StreamID! @documentReference(model: "Site")
+  site: Site! @relationDocument(property: "siteID")
   ownerID: StreamID! @documentReference(model: "EthAccount")
   owner: EthAccount @relationDocument(property: "ownerID")
 	pieceID: StreamID! @documentReference(model: "Piece")
@@ -167,7 +199,7 @@ const pinComposite = await createComposite(ceramic, './schemas/Pin.graphql')
 const pinModelID = pinComposite.modelIDs[5]
 
 await writeSchema(
-  'PinLike',
+  'Like',
   `type Pin
 @loadModel(id: "${pinModelID}") {
   id: ID!
@@ -183,7 +215,7 @@ type Category
   id: ID!
 }
 
-type PinLike
+type Like
 @createModel(accountRelation: LIST, description: "A like for a pin")
 {
 	pinID: StreamID! @documentReference(model: "Pin")
@@ -193,11 +225,11 @@ type PinLike
   ownerID: StreamID! @documentReference(model: "EthAccount")
   owner: EthAccount! @relationDocument(property: "ownerID")
 }`)
-const pinLikeComposite = await createComposite(ceramic, './schemas/PinLike.graphql')
+const pinLikeComposite = await createComposite(ceramic, './schemas/Like.graphql')
 const pinLikeModelID = pinLikeComposite.modelIDs[3]
 
 await writeSchema(
-  'PinDislike',
+  'Dislike',
   `type Pin
 @loadModel(id: "${pinModelID}")
 {
@@ -216,8 +248,8 @@ type Category
   id: ID!
 }
 
-type PinDislike
-@createModel(accountRelation: LIST, description: "A like for a pin")
+type Dislike
+@createModel(accountRelation: LIST, description: "A dislike for a pin")
 {
 	pinID: StreamID! @documentReference(model: "Pin")
 	pin: Pin! @relationDocument(property: "pinID")
@@ -226,13 +258,13 @@ type PinDislike
   ownerID: StreamID! @documentReference(model: "EthAccount")
   owner: EthAccount! @relationDocument(property: "ownerID")
 }`)
-const pinDislikeComposite = await createComposite(ceramic, './schemas/PinDislike.graphql')
+const pinDislikeComposite = await createComposite(ceramic, './schemas/Dislike.graphql')
 const pinDislikeModelID = pinDislikeComposite.modelIDs[3]
 
 await writeSchema(
   'Featured',
-  `type Website
-@loadModel(id: "${websiteModelID}")
+  `type Site
+@loadModel(id: "${siteModelID}")
 {
   id: ID!
 }
@@ -245,9 +277,12 @@ type Pin
 
 type Featured
 @createModel(accountRelation: LIST, description: "A featured content")
+@createIndex(fields: [{path: "siteID"}])
+@createIndex(fields: [{path: "startAt"}])
+@createIndex(fields: [{path: "endAt"}])
 {
-  websiteID: StreamID! @documentReference(model: "Website")
-  website: Website! @relationDocument(property: "websiteID")
+  siteID: StreamID! @documentReference(model: "Site")
+  site: Site! @relationDocument(property: "siteID")
 	pinID: StreamID! @documentReference(model: "Pin")
 	pin: Pin! @relationDocument(property: "pinID")
   startAt: DateTime!
@@ -258,22 +293,25 @@ const featuredModelID = featuredComposite.modelIDs[2]
 
 await writeSchema(
   'Subscription',
-  `type Website
-@loadModel(id: "${websiteModelID}")
+  `type Site
+@loadModel(id: "${siteModelID}")
 {
   id: ID!
 }
 
 type Subscription
-@createModel(accountRelation: LIST, description: "Subcription Website")
+@createModel(accountRelation: LIST, description: "Subcription Site")
+@createIndex(fields: [{path: "siteID"}])
+@createIndex(fields: [{path: "subscribedID"}])
+@createIndex(fields: [{path: "inactive"}])
 {
-  websiteID: StreamID! @documentReference(model: "Website")
-  website: Website! @relationDocument(property: "websiteID")
-	subscribedID: StreamID! @documentReference(model: "Website")
-	subscribedWebsite: Website! @relationDocument(property: "subscribedID")
+  siteID: StreamID @documentReference(model: "Site")
+  site: Site @relationDocument(property: "siteID")
+	subscribedID: StreamID @documentReference(model: "Site")
+	subscribedSite: Site @relationDocument(property: "subscribedID")
 	inactive: Boolean
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: DateTime
+  updatedAt: DateTime
 }`)
 const subscriptionComposite = await createComposite(ceramic, './schemas/Subscription.graphql')
 const subscriptionModelID = subscriptionComposite.modelIDs[1]
@@ -286,13 +324,13 @@ await writeSchema(
   id: ID!
 }
 
-type PinLike
+type Like
 @loadModel(id: "${pinLikeModelID}")
 {
   id: ID!
 }
 
-type PinDislike
+type Dislike
 @loadModel(id: "${pinDislikeModelID}")
 {
   id: ID!
@@ -308,10 +346,10 @@ type Artist
 type Pin
 @loadModel(id: "${pinModelID}")
 {
-  likes: [PinLike] @relationFrom(model: "PinLike", property: "pinID")
-  likesCount: Int! @relationCountFrom(model: "PinLike", property: "pinID")
-  dislikes: [PinDislike] @relationFrom(model: "PinDislike", property: "pinID")
-  dislikesCount: Int! @relationCountFrom(model: "PinDislike", property: "pinID")
+  likes: [Like] @relationFrom(model: "Like", property: "pinID")
+  likesCount: Int! @relationCountFrom(model: "Like", property: "pinID")
+  dislikes: [Dislike] @relationFrom(model: "Dislike", property: "pinID")
+  dislikesCount: Int! @relationCountFrom(model: "Dislike", property: "pinID")
 }
 
 type Category
@@ -319,10 +357,10 @@ type Category
 {
   pins: [Pin] @relationFrom(model: "Pin", property: "categoryID")
   pinsCount: Int! @relationCountFrom(model: "Pin", property: "categoryID")
-  likes: [PinLike] @relationFrom(model: "PinLike", property: "categoryID")
-  likesCount: Int! @relationCountFrom(model: "PinLike", property: "categoryID")
-  dislikes: [PinDislike] @relationFrom(model: "PinDislike", property: "categoryID")
-  dislikesCount: Int! @relationCountFrom(model: "PinDislike", property: "categoryID")
+  likes: [Like] @relationFrom(model: "Like", property: "categoryID")
+  likesCount: Int! @relationCountFrom(model: "Like", property: "categoryID")
+  dislikes: [Dislike] @relationFrom(model: "Dislike", property: "categoryID")
+  dislikesCount: Int! @relationCountFrom(model: "Dislike", property: "categoryID")
 }
 
 type Subscription
@@ -342,31 +380,31 @@ type EthAccount
 {
   pins: [Pin] @relationFrom(model: "Pin", property: "ownerID")
   pinsCount: Int! @relationCountFrom(model: "Pin", property: "ownerID")
-  pinLikes: [PinLike] @relationFrom(model: "PinLike", property: "ownerID")
-  pinLikesCount: Int! @relationCountFrom(model: "PinLike", property: "ownerID")
-  pinDislikes: [PinDislike] @relationFrom(model: "PinDislike", property: "ownerID")
-  pinDislikesCount: Int! @relationCountFrom(model: "PinDislike", property: "ownerID")
+  likes: [Like] @relationFrom(model: "Like", property: "ownerID")
+  likesCount: Int! @relationCountFrom(model: "Like", property: "ownerID")
+  dislikes: [Dislike] @relationFrom(model: "Dislike", property: "ownerID")
+  dislikesCount: Int! @relationCountFrom(model: "Dislike", property: "ownerID")
 }
 
-type Website
-@loadModel(id: "${websiteModelID}")
+type Site
+@loadModel(id: "${siteModelID}")
 {
-  categories: [Category] @relationFrom(model: "Category", property: "websiteID")
-  categoriesCount: Int! @relationCountFrom(model: "Category", property: "websiteID")
-  pins: [Pin] @relationFrom(model: "Pin", property: "websiteID")
-  pinsCount: Int! @relationCountFrom(model: "Pin", property: "websiteID")
-  featured: [Featured] @relationFrom(model: "Featured", property: "websiteID")
-  featuredCount: Int! @relationCountFrom(model: "Featured", property: "websiteID")
-  subscriptions: [Subscription] @relationFrom(model: "Subscription", property: "websiteID")
-  subscriptionsCount: Int! @relationCountFrom(model: "Subscription", property: "websiteID")
-  users: [EthAccount] @relationFrom(model: "EthAccount", property: "websiteID")
-  usersCount: Int! @relationCountFrom(model: "EthAccount", property: "websiteID")
+  categories: [Category] @relationFrom(model: "Category", property: "siteID")
+  categoriesCount: Int! @relationCountFrom(model: "Category", property: "siteID")
+  pins: [Pin] @relationFrom(model: "Pin", property: "siteID")
+  pinsCount: Int! @relationCountFrom(model: "Pin", property: "siteID")
+  featured: [Featured] @relationFrom(model: "Featured", property: "siteID")
+  featuredCount: Int! @relationCountFrom(model: "Featured", property: "siteID")
+  subscriptions: [Subscription] @relationFrom(model: "Subscription", property: "siteID")
+  subscriptionsCount: Int! @relationCountFrom(model: "Subscription", property: "siteID")
+  users: [EthAccount] @relationFrom(model: "EthAccount", property: "siteID")
+  usersCount: Int! @relationCountFrom(model: "EthAccount", property: "siteID")
 }`)
 const finalComposite = await createComposite(ceramic, './schemas/FinalModel.graphql')
 await new Promise((resolve) => setTimeout(() => resolve(), 3000))
 
 const mergedComposite = Composite.from([
-  websiteComposite,
+  siteComposite,
   ethAccountComposite,
   categoryComposite,
   artistComposite,
