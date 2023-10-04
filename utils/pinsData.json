@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Exile On Main Street",
+    "contentCid": "bafybeicerdijwsfcyrnyroladj2zwy4ccex4fpzudtwx2aud7nk2zc3giu",
+    "category": "Music",
+    "details": {
+      "thumbnailCid": "bafkreiefhzxmjbet26mn276vagvn2w2uae4vnjnhqybjge7dallafpt7di",
+      "artist": "The Rolling Stones",
+      "releaseYear": "1972",
+      "type": "Album",
+      "format": "FLAC"
+    }
+  },
+  {
+    "name": "The Rolling Stones",
+    "contentCid": "bafybeiav7vglqinlopl5lwandfbadwaoju6xvn7ok7pswfzkqqcmrix444",
+    "category": "Music",
+    "details": {
+      "thumbnailCid": "bafkreifi4ao4zmp2u2rbzpddiidzv3vqxnbw4y7u7dtmdeozqwcsq55d2q",
+      "artist": "The Rolling Stones",
+      "releaseYear": "1964",
+      "type": "Album",
+      "format": "FLAC"
+    }
+  },
+  {
+    "name": "The Dark Side Of The Moon",
+    "contentCid": "bafybeifn2ktf2ciyomieca5gfyyzn254j6sjx37oej24nbno3uszawpvbi",
+    "category": "Music",
+    "details": {
+      "thumbnailCid": "bafkreig3j4iopn4c2gftqenfx2spoxzyqihpcdtxr32tvmdsh6rged5a2q",
+      "artist": "Pink Floyd",
+      "releaseYear": "1973",
+      "type": "Album",
+      "format": "MP3"
+    }
+  }
+]
