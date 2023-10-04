@@ -1,14 +1,16 @@
 type Piece
-@createModel(accountRelation: LIST, description: "Piece of content") {
-  name: String @string(maxLength: 100)
-  cid: String @string(maxLength: 100)
+@createModel(accountRelation: LIST, description: "Piece of content")
+@createIndex(fields: [{path: "createdAt"}])
+{
+  name: String! @string(maxLength: 100)
+  contentCid: String! @string(maxLength: 100)
   details: Details  
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
 type Details {
-  imageThumbnailCID: String @string(maxLength: 100)
+  thumbnailCid: String @string(maxLength: 100)
   tags: String @string(maxLength: 100)
   musicBrainzID: String @string(maxLength: 100)
   albumTitle: String @string(maxLength: 100)

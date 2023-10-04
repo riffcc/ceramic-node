@@ -13,7 +13,7 @@ type Query {
 
   """Account currently authenticated on the Ceramic instance, if set"""
   viewer: CeramicAccount
-  websiteIndex(
+  siteIndex(
     """Returns the items in the list that come after the specified cursor."""
     after: String
 
@@ -25,10 +25,10 @@ type Query {
 
     """Returns the last n items from the list."""
     last: Int
-    filters: WebsiteFiltersInput
-    sorting: WebsiteSortingInput
-  ): WebsiteConnection
-  websiteCount(filters: WebsiteFiltersInput): Int!
+    filters: SiteFiltersInput
+    sorting: SiteSortingInput
+  ): SiteConnection
+  siteCount(filters: SiteFiltersInput): Int!
   ethAccountIndex(
     """Returns the items in the list that come after the specified cursor."""
     after: String
@@ -89,8 +89,10 @@ type Query {
 
     """Returns the last n items from the list."""
     last: Int
+    filters: PieceFiltersInput
+    sorting: PieceSortingInput
   ): PieceConnection
-  pieceCount: Int!
+  pieceCount(filters: PieceFiltersInput): Int!
   pinIndex(
     """Returns the items in the list that come after the specified cursor."""
     after: String
@@ -107,7 +109,7 @@ type Query {
     sorting: PinSortingInput
   ): PinConnection
   pinCount(filters: PinFiltersInput): Int!
-  pinLikeIndex(
+  likeIndex(
     """Returns the items in the list that come after the specified cursor."""
     after: String
 
@@ -119,9 +121,9 @@ type Query {
 
     """Returns the last n items from the list."""
     last: Int
-  ): PinLikeConnection
-  pinLikeCount: Int!
-  pinDislikeIndex(
+  ): LikeConnection
+  likeCount: Int!
+  dislikeIndex(
     """Returns the items in the list that come after the specified cursor."""
     after: String
 
@@ -133,8 +135,8 @@ type Query {
 
     """Returns the last n items from the list."""
     last: Int
-  ): PinDislikeConnection
-  pinDislikeCount: Int!
+  ): DislikeConnection
+  dislikeCount: Int!
   featuredIndex(
     """Returns the items in the list that come after the specified cursor."""
     after: String
@@ -147,8 +149,10 @@ type Query {
 
     """Returns the last n items from the list."""
     last: Int
+    filters: FeaturedFiltersInput
+    sorting: FeaturedSortingInput
   ): FeaturedConnection
-  featuredCount: Int!
+  featuredCount(filters: FeaturedFiltersInput): Int!
   subscriptionIndex(
     """Returns the items in the list that come after the specified cursor."""
     after: String
@@ -161,8 +165,10 @@ type Query {
 
     """Returns the last n items from the list."""
     last: Int
+    filters: SubscriptionFiltersInput
+    sorting: SubscriptionSortingInput
   ): SubscriptionConnection
-  subscriptionCount: Int!
+  subscriptionCount(filters: SubscriptionFiltersInput): Int!
 }
 
 """An object with an ID"""
@@ -179,7 +185,7 @@ type CeramicAccount implements Node {
   Whether the Ceramic instance is currently authenticated with this account or not
   """
   isViewer: Boolean!
-  websiteList(
+  siteList(
     """Returns the items in the list that come after the specified cursor."""
     after: String
 
@@ -191,10 +197,10 @@ type CeramicAccount implements Node {
 
     """Returns the last n items from the list."""
     last: Int
-    filters: WebsiteFiltersInput
-    sorting: WebsiteSortingInput
-  ): WebsiteConnection
-  websiteListCount(filters: WebsiteFiltersInput): Int!
+    filters: SiteFiltersInput
+    sorting: SiteSortingInput
+  ): SiteConnection
+  siteListCount(filters: SiteFiltersInput): Int!
   ethAccountList(
     """Returns the items in the list that come after the specified cursor."""
     after: String
@@ -255,8 +261,10 @@ type CeramicAccount implements Node {
 
     """Returns the last n items from the list."""
     last: Int
+    filters: PieceFiltersInput
+    sorting: PieceSortingInput
   ): PieceConnection
-  pieceListCount: Int!
+  pieceListCount(filters: PieceFiltersInput): Int!
   pinList(
     """Returns the items in the list that come after the specified cursor."""
     after: String
@@ -273,7 +281,7 @@ type CeramicAccount implements Node {
     sorting: PinSortingInput
   ): PinConnection
   pinListCount(filters: PinFiltersInput): Int!
-  pinLikeList(
+  likeList(
     """Returns the items in the list that come after the specified cursor."""
     after: String
 
@@ -285,9 +293,9 @@ type CeramicAccount implements Node {
 
     """Returns the last n items from the list."""
     last: Int
-  ): PinLikeConnection
-  pinLikeListCount: Int!
-  pinDislikeList(
+  ): LikeConnection
+  likeListCount: Int!
+  dislikeList(
     """Returns the items in the list that come after the specified cursor."""
     after: String
 
@@ -299,8 +307,8 @@ type CeramicAccount implements Node {
 
     """Returns the last n items from the list."""
     last: Int
-  ): PinDislikeConnection
-  pinDislikeListCount: Int!
+  ): DislikeConnection
+  dislikeListCount: Int!
   featuredList(
     """Returns the items in the list that come after the specified cursor."""
     after: String
@@ -313,8 +321,10 @@ type CeramicAccount implements Node {
 
     """Returns the last n items from the list."""
     last: Int
+    filters: FeaturedFiltersInput
+    sorting: FeaturedSortingInput
   ): FeaturedConnection
-  featuredListCount: Int!
+  featuredListCount(filters: FeaturedFiltersInput): Int!
   subscriptionList(
     """Returns the items in the list that come after the specified cursor."""
     after: String
@@ -327,17 +337,19 @@ type CeramicAccount implements Node {
 
     """Returns the last n items from the list."""
     last: Int
+    filters: SubscriptionFiltersInput
+    sorting: SubscriptionSortingInput
   ): SubscriptionConnection
-  subscriptionListCount: Int!
+  subscriptionListCount(filters: SubscriptionFiltersInput): Int!
 }
 
 """A connection to a list of items."""
-type WebsiteConnection {
+type SiteConnection {
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
   """A list of edges."""
-  edges: [WebsiteEdge]
+  edges: [SiteEdge]
 }
 
 """Information about pagination in a connection."""
@@ -356,18 +368,19 @@ type PageInfo {
 }
 
 """An edge in a connection."""
-type WebsiteEdge {
+type SiteEdge {
   """The item at the end of the edge"""
-  node: Website
+  node: Site
 
   """A cursor for use in pagination"""
   cursor: String!
 }
 
-type Website implements Node {
+type Site implements Node {
   id: ID!
   name: String!
   image: String
+  colors: Colors
   createdAt: DateTime!
   updatedAt: DateTime!
   description: String
@@ -432,10 +445,13 @@ type Website implements Node {
 
     """Returns only documents created by the provided account"""
     account: ID
+    filters: FeaturedFiltersInput
+    sorting: FeaturedSortingInput
   ): FeaturedConnection!
   featuredCount(
     """Counts only documents created by the provided account"""
     account: ID
+    filters: FeaturedFiltersInput
   ): Int!
   subscriptions(
     """Returns the items in the list that come after the specified cursor."""
@@ -452,10 +468,13 @@ type Website implements Node {
 
     """Returns only documents created by the provided account"""
     account: ID
+    filters: SubscriptionFiltersInput
+    sorting: SubscriptionSortingInput
   ): SubscriptionConnection!
   subscriptionsCount(
     """Counts only documents created by the provided account"""
     account: ID
+    filters: SubscriptionFiltersInput
   ): Int!
   users(
     """Returns the items in the list that come after the specified cursor."""
@@ -480,6 +499,25 @@ type Website implements Node {
     account: ID
     filters: EthAccountFiltersInput
   ): Int!
+}
+
+type Colors {
+  info: String
+  error: String
+  primary: String
+  success: String
+  surface: String
+  warning: String
+  secondary: String
+  background: String
+  primary_darken_1: String
+  primary_lighten_1: String
+  secondary_darken_1: String
+  background_darken_1: String
+  background_darken_2: String
+  secondary_lighten_1: String
+  background_lighten_1: String
+  background_lighten_2: String
 }
 
 """
@@ -508,8 +546,8 @@ type CategoryEdge {
 type Category implements Node {
   id: ID!
   name: String!
-  websiteID: CeramicStreamID!
-  website: Website
+  siteID: CeramicStreamID!
+  site: Site
   pins(
     """Returns the items in the list that come after the specified cursor."""
     after: String
@@ -548,13 +586,10 @@ type Category implements Node {
 
     """Returns only documents created by the provided account"""
     account: ID
-    filters: CategoryFiltersInput
-    sorting: CategorySortingInput
-  ): CategoryConnection!
+  ): LikeConnection!
   likesCount(
     """Counts only documents created by the provided account"""
     account: ID
-    filters: CategoryFiltersInput
   ): Int!
   dislikes(
     """Returns the items in the list that come after the specified cursor."""
@@ -571,10 +606,13 @@ type Category implements Node {
 
     """Returns only documents created by the provided account"""
     account: ID
-  ): PinDislikeConnection!
+    filters: PinFiltersInput
+    sorting: PinSortingInput
+  ): PinConnection!
   dislikesCount(
     """Counts only documents created by the provided account"""
     account: ID
+    filters: PinFiltersInput
   ): Int!
 }
 
@@ -601,19 +639,19 @@ type PinEdge {
 
 type Pin implements Node {
   id: ID!
+  siteID: CeramicStreamID!
   deleted: Boolean
   ownerID: CeramicStreamID!
   pieceID: CeramicStreamID!
   approved: Boolean
   artistID: CeramicStreamID!
   rejected: Boolean
-  websiteID: CeramicStreamID!
   categoryID: CeramicStreamID!
   rejectionReason: String
+  site: Site
   owner: EthAccount
   piece: Piece
   artist: Artist
-  website: Website
   category: Category
   likes(
     """Returns the items in the list that come after the specified cursor."""
@@ -630,13 +668,10 @@ type Pin implements Node {
 
     """Returns only documents created by the provided account"""
     account: ID
-    filters: CategoryFiltersInput
-    sorting: CategorySortingInput
-  ): CategoryConnection!
+  ): LikeConnection!
   likesCount(
     """Counts only documents created by the provided account"""
     account: ID
-    filters: CategoryFiltersInput
   ): Int!
   dislikes(
     """Returns the items in the list that come after the specified cursor."""
@@ -653,22 +688,26 @@ type Pin implements Node {
 
     """Returns only documents created by the provided account"""
     account: ID
-  ): PinDislikeConnection!
+    filters: PinFiltersInput
+    sorting: PinSortingInput
+  ): PinConnection!
   dislikesCount(
     """Counts only documents created by the provided account"""
     account: ID
+    filters: PinFiltersInput
   ): Int!
 }
 
 type EthAccount implements Node {
   id: ID!
+  siteID: CeramicStreamID!
   address: String!
   isAdmin: Boolean!
   settings: EthAccountSettings!
   createdAt: String!
   updatedAt: String!
-  websiteID: CeramicStreamID!
   isSuperAdmin: Boolean!
+  site: Site
   pins(
     """Returns the items in the list that come after the specified cursor."""
     after: String
@@ -692,7 +731,7 @@ type EthAccount implements Node {
     account: ID
     filters: PinFiltersInput
   ): Int!
-  pinLikes(
+  likes(
     """Returns the items in the list that come after the specified cursor."""
     after: String
 
@@ -707,15 +746,12 @@ type EthAccount implements Node {
 
     """Returns only documents created by the provided account"""
     account: ID
-    filters: CategoryFiltersInput
-    sorting: CategorySortingInput
-  ): CategoryConnection!
-  pinLikesCount(
+  ): LikeConnection!
+  likesCount(
     """Counts only documents created by the provided account"""
     account: ID
-    filters: CategoryFiltersInput
   ): Int!
-  pinDislikes(
+  dislikes(
     """Returns the items in the list that come after the specified cursor."""
     after: String
 
@@ -730,15 +766,19 @@ type EthAccount implements Node {
 
     """Returns only documents created by the provided account"""
     account: ID
-  ): PinDislikeConnection!
-  pinDislikesCount(
+    filters: PinFiltersInput
+    sorting: PinSortingInput
+  ): PinConnection!
+  dislikesCount(
     """Counts only documents created by the provided account"""
     account: ID
+    filters: PinFiltersInput
   ): Int!
 }
 
 type EthAccountSettings {
   autoplay: Boolean!
+  cidAvatar: String
 }
 
 input PinFiltersInput {
@@ -749,9 +789,12 @@ input PinFiltersInput {
 }
 
 input PinObjectFilterInput {
+  siteID: StringValueFilterInput
+  deleted: BooleanValueFilterInput
   ownerID: StringValueFilterInput
+  approved: BooleanValueFilterInput
   artistID: StringValueFilterInput
-  websiteID: StringValueFilterInput
+  rejected: BooleanValueFilterInput
   categoryID: StringValueFilterInput
 }
 
@@ -767,10 +810,18 @@ input StringValueFilterInput {
   greaterThanOrEqualTo: String
 }
 
+input BooleanValueFilterInput {
+  isNull: Boolean
+  equalTo: Boolean
+}
+
 input PinSortingInput {
+  siteID: SortOrder
+  deleted: SortOrder
   ownerID: SortOrder
+  approved: SortOrder
   artistID: SortOrder
-  websiteID: SortOrder
+  rejected: SortOrder
   categoryID: SortOrder
 }
 
@@ -779,40 +830,25 @@ enum SortOrder {
   DESC
 }
 
-input CategoryFiltersInput {
-  where: CategoryObjectFilterInput
-  and: [CategoryFiltersInput!]
-  or: [CategoryFiltersInput!]
-  not: CategoryFiltersInput
-}
-
-input CategoryObjectFilterInput {
-  name: StringValueFilterInput
-}
-
-input CategorySortingInput {
-  name: SortOrder
-}
-
 """A connection to a list of items."""
-type PinDislikeConnection {
+type LikeConnection {
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
   """A list of edges."""
-  edges: [PinDislikeEdge]
+  edges: [LikeEdge]
 }
 
 """An edge in a connection."""
-type PinDislikeEdge {
+type LikeEdge {
   """The item at the end of the edge"""
-  node: PinDislike
+  node: Like
 
   """A cursor for use in pagination"""
   cursor: String!
 }
 
-type PinDislike implements Node {
+type Like implements Node {
   id: ID!
   pinID: CeramicStreamID!
   ownerID: CeramicStreamID!
@@ -824,11 +860,11 @@ type PinDislike implements Node {
 
 type Piece implements Node {
   id: ID!
-  cid: String
-  name: String
+  name: String!
   details: PieceDetails
   createdAt: DateTime!
   updatedAt: DateTime!
+  contentCid: String!
 }
 
 type PieceDetails {
@@ -842,15 +878,15 @@ type PieceDetails {
   bitrate: String
   albumTitle: String
   releaseType: String
+  thumbnailCid: String
   musicBrainzID: String
-  imageThumbnailCID: String
   initialReleaseYear: String
   releaseDescription: String
 }
 
 type Artist implements Node {
   id: ID!
-  name: String
+  name: String!
   pins(
     """Returns the items in the list that come after the specified cursor."""
     after: String
@@ -874,6 +910,23 @@ type Artist implements Node {
     account: ID
     filters: PinFiltersInput
   ): Int!
+}
+
+input CategoryFiltersInput {
+  where: CategoryObjectFilterInput
+  and: [CategoryFiltersInput!]
+  or: [CategoryFiltersInput!]
+  not: CategoryFiltersInput
+}
+
+input CategoryObjectFilterInput {
+  name: StringValueFilterInput
+  siteID: StringValueFilterInput
+}
+
+input CategorySortingInput {
+  name: SortOrder
+  siteID: SortOrder
 }
 
 """A connection to a list of items."""
@@ -898,10 +951,29 @@ type Featured implements Node {
   id: ID!
   endAt: DateTime!
   pinID: CeramicStreamID!
+  siteID: CeramicStreamID!
   startAt: DateTime!
-  websiteID: CeramicStreamID!
   pin: Pin
-  website: Website
+  site: Site
+}
+
+input FeaturedFiltersInput {
+  where: FeaturedObjectFilterInput
+  and: [FeaturedFiltersInput!]
+  or: [FeaturedFiltersInput!]
+  not: FeaturedFiltersInput
+}
+
+input FeaturedObjectFilterInput {
+  endAt: StringValueFilterInput
+  siteID: StringValueFilterInput
+  startAt: StringValueFilterInput
+}
+
+input FeaturedSortingInput {
+  endAt: SortOrder
+  siteID: SortOrder
+  startAt: SortOrder
 }
 
 """A connection to a list of items."""
@@ -924,13 +996,32 @@ type SubscriptionEdge {
 
 type Subscription implements Node {
   id: ID!
+  siteID: CeramicStreamID
   inactive: Boolean
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  websiteID: CeramicStreamID!
-  subscribedID: CeramicStreamID!
-  website: Website
-  subscribedWebsite: Website
+  createdAt: DateTime
+  updatedAt: DateTime
+  subscribedID: CeramicStreamID
+  site: Site
+  subscribedSite: Site
+}
+
+input SubscriptionFiltersInput {
+  where: SubscriptionObjectFilterInput
+  and: [SubscriptionFiltersInput!]
+  or: [SubscriptionFiltersInput!]
+  not: SubscriptionFiltersInput
+}
+
+input SubscriptionObjectFilterInput {
+  siteID: StringValueFilterInput
+  inactive: BooleanValueFilterInput
+  subscribedID: StringValueFilterInput
+}
+
+input SubscriptionSortingInput {
+  siteID: SortOrder
+  inactive: SortOrder
+  subscribedID: SortOrder
 }
 
 """A connection to a list of items."""
@@ -959,25 +1050,31 @@ input EthAccountFiltersInput {
 }
 
 input EthAccountObjectFilterInput {
+  siteID: StringValueFilterInput
   address: StringValueFilterInput
+  isAdmin: BooleanValueFilterInput
+  isSuperAdmin: BooleanValueFilterInput
 }
 
 input EthAccountSortingInput {
+  siteID: SortOrder
   address: SortOrder
+  isAdmin: SortOrder
+  isSuperAdmin: SortOrder
 }
 
-input WebsiteFiltersInput {
-  where: WebsiteObjectFilterInput
-  and: [WebsiteFiltersInput!]
-  or: [WebsiteFiltersInput!]
-  not: WebsiteFiltersInput
+input SiteFiltersInput {
+  where: SiteObjectFilterInput
+  and: [SiteFiltersInput!]
+  or: [SiteFiltersInput!]
+  not: SiteFiltersInput
 }
 
-input WebsiteObjectFilterInput {
+input SiteObjectFilterInput {
   name: StringValueFilterInput
 }
 
-input WebsiteSortingInput {
+input SiteSortingInput {
   name: SortOrder
 }
 
@@ -1032,25 +1129,40 @@ type PieceEdge {
   cursor: String!
 }
 
+input PieceFiltersInput {
+  where: PieceObjectFilterInput
+  and: [PieceFiltersInput!]
+  or: [PieceFiltersInput!]
+  not: PieceFiltersInput
+}
+
+input PieceObjectFilterInput {
+  createdAt: StringValueFilterInput
+}
+
+input PieceSortingInput {
+  createdAt: SortOrder
+}
+
 """A connection to a list of items."""
-type PinLikeConnection {
+type DislikeConnection {
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
   """A list of edges."""
-  edges: [PinLikeEdge]
+  edges: [DislikeEdge]
 }
 
 """An edge in a connection."""
-type PinLikeEdge {
+type DislikeEdge {
   """The item at the end of the edge"""
-  node: PinLike
+  node: Dislike
 
   """A cursor for use in pagination"""
   cursor: String!
 }
 
-type PinLike implements Node {
+type Dislike implements Node {
   id: ID!
   pinID: CeramicStreamID!
   ownerID: CeramicStreamID!
@@ -1061,8 +1173,8 @@ type PinLike implements Node {
 }
 
 type Mutation {
-  createWebsite(input: CreateWebsiteInput!): CreateWebsitePayload
-  updateWebsite(input: UpdateWebsiteInput!): UpdateWebsitePayload
+  createSite(input: CreateSiteInput!): CreateSitePayload
+  updateSite(input: UpdateSiteInput!): UpdateSitePayload
   createEthAccount(input: CreateEthAccountInput!): CreateEthAccountPayload
   updateEthAccount(input: UpdateEthAccountInput!): UpdateEthAccountPayload
   createCategory(input: CreateCategoryInput!): CreateCategoryPayload
@@ -1073,17 +1185,17 @@ type Mutation {
   updatePiece(input: UpdatePieceInput!): UpdatePiecePayload
   createPin(input: CreatePinInput!): CreatePinPayload
   updatePin(input: UpdatePinInput!): UpdatePinPayload
-  createPinLike(input: CreatePinLikeInput!): CreatePinLikePayload
-  updatePinLike(input: UpdatePinLikeInput!): UpdatePinLikePayload
-  createPinDislike(input: CreatePinDislikeInput!): CreatePinDislikePayload
-  updatePinDislike(input: UpdatePinDislikeInput!): UpdatePinDislikePayload
+  createLike(input: CreateLikeInput!): CreateLikePayload
+  updateLike(input: UpdateLikeInput!): UpdateLikePayload
+  createDislike(input: CreateDislikeInput!): CreateDislikePayload
+  updateDislike(input: UpdateDislikeInput!): UpdateDislikePayload
   createFeatured(input: CreateFeaturedInput!): CreateFeaturedPayload
   updateFeatured(input: UpdateFeaturedInput!): UpdateFeaturedPayload
   createSubscription(input: CreateSubscriptionInput!): CreateSubscriptionPayload
   updateSubscription(input: UpdateSubscriptionInput!): UpdateSubscriptionPayload
 }
 
-type CreateWebsitePayload {
+type CreateSitePayload {
   """Fetches an object given its ID"""
   node(
     """The ID of an object"""
@@ -1092,24 +1204,44 @@ type CreateWebsitePayload {
 
   """Account currently authenticated on the Ceramic instance, if set"""
   viewer: CeramicAccount
-  document: Website!
+  document: Site!
   clientMutationId: String
 }
 
-input CreateWebsiteInput {
-  content: WebsiteInput!
+input CreateSiteInput {
+  content: SiteInput!
   clientMutationId: String
 }
 
-input WebsiteInput {
+input SiteInput {
   name: String!
   image: String
+  colors: ColorsInput
   createdAt: DateTime!
   updatedAt: DateTime!
   description: String
 }
 
-type UpdateWebsitePayload {
+input ColorsInput {
+  info: String
+  error: String
+  primary: String
+  success: String
+  surface: String
+  warning: String
+  secondary: String
+  background: String
+  primary_darken_1: String
+  primary_lighten_1: String
+  secondary_darken_1: String
+  background_darken_1: String
+  background_darken_2: String
+  secondary_lighten_1: String
+  background_lighten_1: String
+  background_lighten_2: String
+}
+
+type UpdateSitePayload {
   """Fetches an object given its ID"""
   node(
     """The ID of an object"""
@@ -1118,20 +1250,21 @@ type UpdateWebsitePayload {
 
   """Account currently authenticated on the Ceramic instance, if set"""
   viewer: CeramicAccount
-  document: Website!
+  document: Site!
   clientMutationId: String
 }
 
-input UpdateWebsiteInput {
+input UpdateSiteInput {
   id: ID!
-  content: PartialWebsiteInput!
+  content: PartialSiteInput!
   options: UpdateOptionsInput
   clientMutationId: String
 }
 
-input PartialWebsiteInput {
+input PartialSiteInput {
   name: String
   image: String
+  colors: ColorsInput
   createdAt: DateTime
   updatedAt: DateTime
   description: String
@@ -1169,17 +1302,18 @@ input CreateEthAccountInput {
 }
 
 input EthAccountInput {
+  siteID: CeramicStreamID!
   address: String!
   isAdmin: Boolean!
   settings: EthAccountSettingsInput!
   createdAt: String!
   updatedAt: String!
-  websiteID: CeramicStreamID!
   isSuperAdmin: Boolean!
 }
 
 input EthAccountSettingsInput {
   autoplay: Boolean!
+  cidAvatar: String
 }
 
 type UpdateEthAccountPayload {
@@ -1203,12 +1337,12 @@ input UpdateEthAccountInput {
 }
 
 input PartialEthAccountInput {
+  siteID: CeramicStreamID
   address: String
   isAdmin: Boolean
   settings: EthAccountSettingsInput
   createdAt: String
   updatedAt: String
-  websiteID: CeramicStreamID
   isSuperAdmin: Boolean
 }
 
@@ -1232,7 +1366,7 @@ input CreateCategoryInput {
 
 input CategoryInput {
   name: String!
-  websiteID: CeramicStreamID!
+  siteID: CeramicStreamID!
 }
 
 type UpdateCategoryPayload {
@@ -1257,7 +1391,7 @@ input UpdateCategoryInput {
 
 input PartialCategoryInput {
   name: String
-  websiteID: CeramicStreamID
+  siteID: CeramicStreamID
 }
 
 type CreateArtistPayload {
@@ -1279,7 +1413,7 @@ input CreateArtistInput {
 }
 
 input ArtistInput {
-  name: String
+  name: String!
 }
 
 type UpdateArtistPayload {
@@ -1325,11 +1459,11 @@ input CreatePieceInput {
 }
 
 input PieceInput {
-  cid: String
-  name: String
+  name: String!
   details: PieceDetailsInput
   createdAt: DateTime!
   updatedAt: DateTime!
+  contentCid: String!
 }
 
 input PieceDetailsInput {
@@ -1343,8 +1477,8 @@ input PieceDetailsInput {
   bitrate: String
   albumTitle: String
   releaseType: String
+  thumbnailCid: String
   musicBrainzID: String
-  imageThumbnailCID: String
   initialReleaseYear: String
   releaseDescription: String
 }
@@ -1370,11 +1504,11 @@ input UpdatePieceInput {
 }
 
 input PartialPieceInput {
-  cid: String
   name: String
   details: PieceDetailsInput
   createdAt: DateTime
   updatedAt: DateTime
+  contentCid: String
 }
 
 type CreatePinPayload {
@@ -1396,13 +1530,13 @@ input CreatePinInput {
 }
 
 input PinInput {
+  siteID: CeramicStreamID!
   deleted: Boolean
   ownerID: CeramicStreamID!
   pieceID: CeramicStreamID!
   approved: Boolean
   artistID: CeramicStreamID!
   rejected: Boolean
-  websiteID: CeramicStreamID!
   categoryID: CeramicStreamID!
   rejectionReason: String
 }
@@ -1428,18 +1562,18 @@ input UpdatePinInput {
 }
 
 input PartialPinInput {
+  siteID: CeramicStreamID
   deleted: Boolean
   ownerID: CeramicStreamID
   pieceID: CeramicStreamID
   approved: Boolean
   artistID: CeramicStreamID
   rejected: Boolean
-  websiteID: CeramicStreamID
   categoryID: CeramicStreamID
   rejectionReason: String
 }
 
-type CreatePinLikePayload {
+type CreateLikePayload {
   """Fetches an object given its ID"""
   node(
     """The ID of an object"""
@@ -1448,22 +1582,22 @@ type CreatePinLikePayload {
 
   """Account currently authenticated on the Ceramic instance, if set"""
   viewer: CeramicAccount
-  document: PinLike!
+  document: Like!
   clientMutationId: String
 }
 
-input CreatePinLikeInput {
-  content: PinLikeInput!
+input CreateLikeInput {
+  content: LikeInput!
   clientMutationId: String
 }
 
-input PinLikeInput {
+input LikeInput {
   pinID: CeramicStreamID!
   ownerID: CeramicStreamID!
   categoryID: CeramicStreamID!
 }
 
-type UpdatePinLikePayload {
+type UpdateLikePayload {
   """Fetches an object given its ID"""
   node(
     """The ID of an object"""
@@ -1472,24 +1606,24 @@ type UpdatePinLikePayload {
 
   """Account currently authenticated on the Ceramic instance, if set"""
   viewer: CeramicAccount
-  document: PinLike!
+  document: Like!
   clientMutationId: String
 }
 
-input UpdatePinLikeInput {
+input UpdateLikeInput {
   id: ID!
-  content: PartialPinLikeInput!
+  content: PartialLikeInput!
   options: UpdateOptionsInput
   clientMutationId: String
 }
 
-input PartialPinLikeInput {
+input PartialLikeInput {
   pinID: CeramicStreamID
   ownerID: CeramicStreamID
   categoryID: CeramicStreamID
 }
 
-type CreatePinDislikePayload {
+type CreateDislikePayload {
   """Fetches an object given its ID"""
   node(
     """The ID of an object"""
@@ -1498,22 +1632,22 @@ type CreatePinDislikePayload {
 
   """Account currently authenticated on the Ceramic instance, if set"""
   viewer: CeramicAccount
-  document: PinDislike!
+  document: Dislike!
   clientMutationId: String
 }
 
-input CreatePinDislikeInput {
-  content: PinDislikeInput!
+input CreateDislikeInput {
+  content: DislikeInput!
   clientMutationId: String
 }
 
-input PinDislikeInput {
+input DislikeInput {
   pinID: CeramicStreamID!
   ownerID: CeramicStreamID!
   categoryID: CeramicStreamID!
 }
 
-type UpdatePinDislikePayload {
+type UpdateDislikePayload {
   """Fetches an object given its ID"""
   node(
     """The ID of an object"""
@@ -1522,18 +1656,18 @@ type UpdatePinDislikePayload {
 
   """Account currently authenticated on the Ceramic instance, if set"""
   viewer: CeramicAccount
-  document: PinDislike!
+  document: Dislike!
   clientMutationId: String
 }
 
-input UpdatePinDislikeInput {
+input UpdateDislikeInput {
   id: ID!
-  content: PartialPinDislikeInput!
+  content: PartialDislikeInput!
   options: UpdateOptionsInput
   clientMutationId: String
 }
 
-input PartialPinDislikeInput {
+input PartialDislikeInput {
   pinID: CeramicStreamID
   ownerID: CeramicStreamID
   categoryID: CeramicStreamID
@@ -1560,8 +1694,8 @@ input CreateFeaturedInput {
 input FeaturedInput {
   endAt: DateTime!
   pinID: CeramicStreamID!
+  siteID: CeramicStreamID!
   startAt: DateTime!
-  websiteID: CeramicStreamID!
 }
 
 type UpdateFeaturedPayload {
@@ -1587,8 +1721,8 @@ input UpdateFeaturedInput {
 input PartialFeaturedInput {
   endAt: DateTime
   pinID: CeramicStreamID
+  siteID: CeramicStreamID
   startAt: DateTime
-  websiteID: CeramicStreamID
 }
 
 type CreateSubscriptionPayload {
@@ -1610,11 +1744,11 @@ input CreateSubscriptionInput {
 }
 
 input SubscriptionInput {
+  siteID: CeramicStreamID
   inactive: Boolean
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  websiteID: CeramicStreamID!
-  subscribedID: CeramicStreamID!
+  createdAt: DateTime
+  updatedAt: DateTime
+  subscribedID: CeramicStreamID
 }
 
 type UpdateSubscriptionPayload {
@@ -1638,9 +1772,9 @@ input UpdateSubscriptionInput {
 }
 
 input PartialSubscriptionInput {
+  siteID: CeramicStreamID
   inactive: Boolean
   createdAt: DateTime
   updatedAt: DateTime
-  websiteID: CeramicStreamID
   subscribedID: CeramicStreamID
 }

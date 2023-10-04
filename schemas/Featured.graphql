@@ -1,20 +1,23 @@
-type Website
-@loadModel(id: "kjzl6hvfrbw6c6krz7wzgvo2opqdhb12yv9vy0y5qid5vnvyz8m28jsqywnf52j")
+type Site
+@loadModel(id: "kjzl6hvfrbw6camklj6h151m4z1hgnhzd0y3e7w6kr5zeqagsywmdaad8up1qjh")
 {
   id: ID!
 }
 
 type Pin
-@loadModel(id: "kjzl6hvfrbw6c7a1l0zo3947d5y2t302v6urrm4yh8xx39uso9v8h211x9t8mkp")
+@loadModel(id: "kjzl6hvfrbw6c5kv3wd761nc6fgvhondx8xww9o8n175dmsr94hqrjmon7rpyo3")
 {
   id: ID!
 }
 
 type Featured
 @createModel(accountRelation: LIST, description: "A featured content")
+@createIndex(fields: [{path: "siteID"}])
+@createIndex(fields: [{path: "startAt"}])
+@createIndex(fields: [{path: "endAt"}])
 {
-  websiteID: StreamID! @documentReference(model: "Website")
-  website: Website! @relationDocument(property: "websiteID")
+  siteID: StreamID! @documentReference(model: "Site")
+  site: Site! @relationDocument(property: "siteID")
 	pinID: StreamID! @documentReference(model: "Pin")
 	pin: Pin! @relationDocument(property: "pinID")
   startAt: DateTime!

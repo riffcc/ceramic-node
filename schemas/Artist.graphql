@@ -2,5 +2,5 @@ type Artist
 @createModel(accountRelation: LIST, description: "An Artist")
 @createIndex(fields: [{path: "name"}])
 {
-  name: String @string(maxLength: 100)
+  name: String! @string(maxLength: 100)
 }

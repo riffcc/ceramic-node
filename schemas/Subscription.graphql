@@ -1,17 +1,20 @@
-type Website
-@loadModel(id: "kjzl6hvfrbw6c6krz7wzgvo2opqdhb12yv9vy0y5qid5vnvyz8m28jsqywnf52j")
+type Site
+@loadModel(id: "kjzl6hvfrbw6camklj6h151m4z1hgnhzd0y3e7w6kr5zeqagsywmdaad8up1qjh")
 {
   id: ID!
 }
 
 type Subscription
-@createModel(accountRelation: LIST, description: "Subcription Website")
+@createModel(accountRelation: LIST, description: "Subcription Site")
+@createIndex(fields: [{path: "siteID"}])
+@createIndex(fields: [{path: "subscribedID"}])
+@createIndex(fields: [{path: "inactive"}])
 {
-  websiteID: StreamID! @documentReference(model: "Website")
-  website: Website! @relationDocument(property: "websiteID")
-	subscribedID: StreamID! @documentReference(model: "Website")
-	subscribedWebsite: Website! @relationDocument(property: "subscribedID")
+  siteID: StreamID @documentReference(model: "Site")
+  site: Site @relationDocument(property: "siteID")
+	subscribedID: StreamID @documentReference(model: "Site")
+	subscribedSite: Site @relationDocument(property: "subscribedID")
 	inactive: Boolean
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: DateTime
+  updatedAt: DateTime
 }

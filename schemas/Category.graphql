@@ -1,13 +1,14 @@
-type Website
-@loadModel(id: "kjzl6hvfrbw6c6krz7wzgvo2opqdhb12yv9vy0y5qid5vnvyz8m28jsqywnf52j") {
+type Site
+@loadModel(id: "kjzl6hvfrbw6camklj6h151m4z1hgnhzd0y3e7w6kr5zeqagsywmdaad8up1qjh") {
   id: ID!
 }
 
 type Category
 @createModel(accountRelation: LIST, description: "A category")
+@createIndex(fields: [{path: "siteID"}])
 @createIndex(fields: [{path: "name"}])
 {
-  websiteID: StreamID! @documentReference(model: "Website")
-  website: Website @relationDocument(property: "websiteID")
+  siteID: StreamID! @documentReference(model: "Site")
+  site: Site! @relationDocument(property: "siteID")
   name: String! @string(maxLength:100)
 }

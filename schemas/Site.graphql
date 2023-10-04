@@ -1,0 +1,30 @@
+type Site
+@createModel(accountRelation: LIST, description: "A Site")
+@createIndex(fields: [{path: "name"}])
+{
+  name: String! @string(maxLength: 50)
+  description: String @string(maxLength: 150)
+  image: String @string(maxLength: 100)
+  colors: Colors
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Colors {
+  background: String @string(maxLength: 10)
+  background_lighten_1: String @string(maxLength: 10)
+  background_lighten_2: String @string(maxLength: 10)
+  background_darken_1: String @string(maxLength: 10)
+  background_darken_2: String @string(maxLength: 10)
+  primary: String @string(maxLength: 10)
+  primary_lighten_1: String @string(maxLength: 10)
+  primary_darken_1: String @string(maxLength: 10)
+  secondary: String @string(maxLength: 10)
+  secondary_lighten_1: String @string(maxLength: 10)
+  secondary_darken_1: String @string(maxLength: 10)
+  surface: String @string(maxLength: 10)
+  error: String @string(maxLength: 10)
+  info: String @string(maxLength: 10)
+  success: String @string(maxLength: 10)
+  warning: String @string(maxLength: 10)
+}
