@@ -1,52 +1,68 @@
-# ceramic-node
-Ceramic tooling for Riff.CC. Required for the Riff.CC Ceramic Prototype.
+# Riff.CC Ceramic-Node
 
-## Requirements 
+This repository hosts the Ceramic-Node tooling for the Riff.CC project; although part of the main Ceramic and ComposeDB platforms, and not developed by Riff.CC itself, it is required for the [Riff.CC on Ceramic](https://github.com/riffcc/ceramic-riff-web) prototype. This page **only** contains instructions on how to install ceramic-node in the context of setting up CeramicRiff, and assumes the reader viewed this from the CeramicRiff installation intructions; for general information about CeramicRiff or the main Riff.CC project as a whole, please see their respective pages.
 
-Install the required global packages ceramic/cli and composedb/cli
+## Getting Started
+
+As before, although Ceramic-Node will work on any standard Linux distribution where standard utilities like a webserver and Node.JS are available, the instructions assume the reader is using **the latest LTS releases of Debian or Ubuntu**.
+
+### Dependencies
+
+1. Ensure that **Node.JS** and **yarn** are installed. The CeramicRiff installation guide already covers those.
+
+2. Install the required global packages `ceramic/cli` and `composedb/cli`:
 
 ```bash
 yarn global add @ceramicnetwork/cli
-```
-```bash
 yarn global add @composedb/cli
 ```
 
-## Usage
+### Installation
 
-Install project packages.
+1. Clone ceramic-node's GitHub repository:
 
 ```bash
+git clone https://github.com/riffcc/ceramic-node.git
+```
+
+2. Move into ceramic-node's directory and set up its installation packages:
+
+```bash
+cd ceramic-node
 yarn install
 ```
 
-Generate DID private key
+3. Generate a DID private key:
 
 ```bash
 yarn run generate:private-key
 ```
 
-Copy .env.example to .env and fill in PRIVATE_KEY
+4. Copy `.env.example` to `.env` and fill in the `PRIVATE_KEY` field:
+
 ```bash
 PRIVATE_KEY=
 ```
 
-Fill in the node url variable, if you run your own node it should be http://localhost:7007
+5. Fill in the node url variable:
+    - **Tip:** If you're running your own node, you should input `http://localhost:7007`.
 ```bash
 NODE_URL=
 ```
 
-Run the Ceramic node for a few seconds and then stop it to generate a configuration file
+6. Run the Ceramic node for a few seconds, and then stop it to generate a configuration file:
+
 ```bash
 yarn run ceramic-node
 ```
 
-Create DID key from private key
+7. Create a DID key from private key:
+
 ```bash
 yarn run generate:did-key <PRIVATE_KEY>
 ```
 
-Copy the DID key and insert it into your node configuration file (normally this file will be at `~/.ceramic/daemon.config.json`)
+8. Copy the DID key and insert it into your node configuration file, normally located in `~/.ceramic/daemon.config.json`:
 
 ```json
 {
@@ -84,45 +100,48 @@ Copy the DID key and insert it into your node configuration file (normally this 
 }
 ```
 
-Run the ceramic node (we suggest using something like `screen` to keep it running in the background)
-
+9. Run the ceramic-node instance:
+    - **Tip:** We suggest using something like `screen` to keep it running in the background.
 ```bash
 yarn run ceramic-node
 ```
 
-Index the composites on your node
+10. Index the composites on your node:
 
 ```bash
 yarn run index:composites
 ```
 
-Fill out ADMIN_ETH_ADDRESS on .env file to create an website admin. Must be a valid Ethereum Address
+11. Fill out ADMIN_ETH_ADDRESS on the .env file to create an website admin:
+    - **Note:** It *must* be a valid Ethereum Address!
 ```bash
 ADMIN_ETH_ADDRESS=
 ```
 
-Create a new website
+12. Create a new website:
 
 ```bash
 yarn run generate:website
 ```
 
-For testing development you can execute graphql example queries.
+## Configuration
+
+* For testing development, you can execute graphql example queries. This command generates a Test WebsiteID, which must be copied into `riff.cc-data-manager-poc/.env.local`:
 
 ```bash
 yarn run graphql:example-queries
 ```
-> This script generates a Test WebsiteID, must be copied into **riff.cc-data-manager-poc/.env.local**
 
+* In order for users and admins to create and modify documents, it is required to run the Admin Server API:
 
-It is required to run the Admin Server API, so that users and admins can create and modify documents.
 ```bash
 yarn run admin:server
 ```
 
-For more info about API, visit [ADMIN-SERVER-API](https://github.com/riffcc/ceramic-node/blob/main/ADMIN-SERVER-API.md).
+For more info about the API, see the [ADMIN-SERVER-API](https://github.com/riffcc/ceramic-node/blob/main/ADMIN-SERVER-API.md) documentation file.
 
-Optionally you can run a GraphQL server with the GraphQL interface
+* Optionally, you can run a GraphQL server with the GraphQL interface:
+
 ```bash
 yarn run graphql:server
 ```
