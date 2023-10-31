@@ -1,8 +1,8 @@
-# How the Admin Server API works
+# The Admin Server API and How it Works
 
-Allows users to create Piece type documents and link them to Pin type documents via the Ceramic API and Admin Server. The following describes the document creation process and the actions allowed for users and administrators.
+The Admin Server API allows users to create "Piece"-type documents and link them to "Pin"-type documents via the Ceramic API and Admin Server. It performs its operations on the authenticated Ceramic client using its own DID-key, and as a result, "Pin" documents are always created through the Admin Server API.
 
-The Admin Server API performs its operations on the authenticated Ceramic client using its own DID-key. As a result, Pin documents are always created through the Admin Server API.
+This page describes and details the document creation process, as well as the actions allowed for users and administrators.
 
 ## Document creation
 When a user uploads a new document via the /upload page in Riff.cc, a Ceramic API call is made authenticated with the user's DID-key. This creates a new document of type Piece and returns the StreamID of the new document.
@@ -23,7 +23,7 @@ After creating the Piece document, the application makes a call to the Admin Ser
 
 This data is used to create a new Pin document that links to the Piece document via its StreamID, named pieceID in the data object.
 
-## Actions allowed for users
+## Actions allowed for Users
 Users can perform two actions on Riff.cc:
 
 ### Action **create**
@@ -32,11 +32,11 @@ When a user creates a new Piece document, the API is called with the "create" ac
 ### Action **edit**
 If the Pin document has not yet been approved or rejected, the user can modify the "name", "cid" and "details" fields of the Piece document and the Pin document category. If this action is executed, the API takes the StreamID of the current Pin document and deletes it. Then, create a new copy of the Piece document with the updated fields and with the new StreamID create a new Pin document with the updated category (if it has changed).
 
-## Actions allowed for admins
-Administrators are allowed to call all other actions. The following actions are allowed:
+## Actions allowed for Administrators
+Administrators are allowed to call all User actions, in addition to the following Admin-exclusive ones:
 
 ### Action **edit**
-The "edit" action works the same way as when the user executes it. Administrators can modify the "name", "cid" and "details" fields of the Piece document and the category of the Pin document (even if the Pin document has been approved or rejected).
+The "edit" action works the same way as when the user executes it; however, administrators can modify the "name", "cid" and "details" fields of the Piece document and the category of the Pin document even if the Pin document has been approved or rejected.
 
 ### Action **reject**
 The "reject" action allows to mark a Pin document as rejected and provide a rejection reason in the "rejectionReason" field.
