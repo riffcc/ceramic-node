@@ -1,5 +1,5 @@
 type Site
-@loadModel(id: "kjzl6hvfrbw6camklj6h151m4z1hgnhzd0y3e7w6kr5zeqagsywmdaad8up1qjh")
+@loadModel(id: "kjzl6hvfrbw6c8sistqa9edkiwengx7v5smvz9dlyqx693qyx5i4veb3hc5w9bp")
 {
   id: ID!
 }

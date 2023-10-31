@@ -28,6 +28,7 @@ await writeSchema(
   description: String @string(maxLength: 150)
   image: String @string(maxLength: 100)
   colors: Colors
+  featuredCategories: [FeaturedCategory] @list(maxLength: 4)
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -49,6 +50,10 @@ type Colors {
   info: String @string(maxLength: 10)
   success: String @string(maxLength: 10)
   warning: String @string(maxLength: 10)
+}
+
+type FeaturedCategory {
+  name: String! @string(maxLength: 32)
 }
 `)
 const siteComposite = await createComposite(ceramic, './schemas/Site.graphql')

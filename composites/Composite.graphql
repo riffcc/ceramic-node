@@ -384,6 +384,7 @@ type Site implements Node {
   createdAt: DateTime!
   updatedAt: DateTime!
   description: String
+  featuredCategories: [FeaturedCategory]
   categories(
     """Returns the items in the list that come after the specified cursor."""
     after: String
@@ -525,6 +526,10 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
+type FeaturedCategory {
+  name: String!
+}
+
 """A connection to a list of items."""
 type CategoryConnection {
   """Information to aid in pagination."""
@@ -606,13 +611,10 @@ type Category implements Node {
 
     """Returns only documents created by the provided account"""
     account: ID
-    filters: PinFiltersInput
-    sorting: PinSortingInput
-  ): PinConnection!
+  ): DislikeConnection!
   dislikesCount(
     """Counts only documents created by the provided account"""
     account: ID
-    filters: PinFiltersInput
   ): Int!
 }
 
@@ -688,13 +690,10 @@ type Pin implements Node {
 
     """Returns only documents created by the provided account"""
     account: ID
-    filters: PinFiltersInput
-    sorting: PinSortingInput
-  ): PinConnection!
+  ): DislikeConnection!
   dislikesCount(
     """Counts only documents created by the provided account"""
     account: ID
-    filters: PinFiltersInput
   ): Int!
 }
 
@@ -766,13 +765,10 @@ type EthAccount implements Node {
 
     """Returns only documents created by the provided account"""
     account: ID
-    filters: PinFiltersInput
-    sorting: PinSortingInput
-  ): PinConnection!
+  ): DislikeConnection!
   dislikesCount(
     """Counts only documents created by the provided account"""
     account: ID
-    filters: PinFiltersInput
   ): Int!
 }
 
@@ -849,6 +845,34 @@ type LikeEdge {
 }
 
 type Like implements Node {
+  id: ID!
+  pinID: CeramicStreamID!
+  ownerID: CeramicStreamID!
+  categoryID: CeramicStreamID!
+  pin: Pin
+  owner: EthAccount
+  category: Category
+}
+
+"""A connection to a list of items."""
+type DislikeConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [DislikeEdge]
+}
+
+"""An edge in a connection."""
+type DislikeEdge {
+  """The item at the end of the edge"""
+  node: Dislike
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+type Dislike implements Node {
   id: ID!
   pinID: CeramicStreamID!
   ownerID: CeramicStreamID!
@@ -1144,34 +1168,6 @@ input PieceSortingInput {
   createdAt: SortOrder
 }
 
-"""A connection to a list of items."""
-type DislikeConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [DislikeEdge]
-}
-
-"""An edge in a connection."""
-type DislikeEdge {
-  """The item at the end of the edge"""
-  node: Dislike
-
-  """A cursor for use in pagination"""
-  cursor: String!
-}
-
-type Dislike implements Node {
-  id: ID!
-  pinID: CeramicStreamID!
-  ownerID: CeramicStreamID!
-  categoryID: CeramicStreamID!
-  pin: Pin
-  owner: EthAccount
-  category: Category
-}
-
 type Mutation {
   createSite(input: CreateSiteInput!): CreateSitePayload
   updateSite(input: UpdateSiteInput!): UpdateSitePayload
@@ -1220,6 +1216,7 @@ input SiteInput {
   createdAt: DateTime!
   updatedAt: DateTime!
   description: String
+  featuredCategories: [FeaturedCategoryInput]
 }
 
 input ColorsInput {
@@ -1239,6 +1236,10 @@ input ColorsInput {
   secondary_lighten_1: String
   background_lighten_1: String
   background_lighten_2: String
+}
+
+input FeaturedCategoryInput {
+  name: String!
 }
 
 type UpdateSitePayload {
@@ -1268,6 +1269,7 @@ input PartialSiteInput {
   createdAt: DateTime
   updatedAt: DateTime
   description: String
+  featuredCategories: [FeaturedCategoryInput]
 }
 
 input UpdateOptionsInput {

@@ -1,11 +1,11 @@
 type Site
-@loadModel(id: "kjzl6hvfrbw6camklj6h151m4z1hgnhzd0y3e7w6kr5zeqagsywmdaad8up1qjh")
+@loadModel(id: "kjzl6hvfrbw6c8sistqa9edkiwengx7v5smvz9dlyqx693qyx5i4veb3hc5w9bp")
 {
   id: ID!
 }
 
 type Pin
-@loadModel(id: "kjzl6hvfrbw6c5kv3wd761nc6fgvhondx8xww9o8n175dmsr94hqrjmon7rpyo3")
+@loadModel(id: "kjzl6hvfrbw6c7c3qvorm0audwdtojql4v1fup5esjdzaazi957we81t58qbi8k")
 {
   id: ID!
 }

@@ -40,6 +40,7 @@ const createSiteMutationInput = {
       name: name ?? 'Test Site',
       description,
       image,
+      featuredCategories: [],
       colors: defaultThemeColors,
       createdAt: (new Date).toISOString(),
       updatedAt: (new Date).toISOString()
