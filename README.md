@@ -1,6 +1,6 @@
 # Riff.CC Ceramic-Node
 
-This repository hosts the Ceramic-Node tooling for the Riff.CC project; although part of the main Ceramic and ComposeDB platforms, and not developed by Riff.CC itself, it is required for the [Riff.CC on Ceramic](https://github.com/riffcc/ceramic-riff-web) prototype. This page **only** contains instructions on how to install ceramic-node in the context of setting up CeramicRiff, and assumes the reader viewed this from the CeramicRiff installation intructions; for general information about CeramicRiff or the main Riff.CC project as a whole, please see their respective pages.
+This repository hosts the Ceramic-Node tooling for the Riff.CC project; although part of the main Ceramic and ComposeDB platforms, and not developed by Riff.CC itself, it is required for the [Riff.CC on Ceramic](https://github.com/riffcc/riff.cc-vue) prototype. This page **only** contains instructions on how to install ceramic-node in the context of setting up CeramicRiff, and assumes the reader viewed this from the CeramicRiff installation intructions; for general information about CeramicRiff or the main Riff.CC project as a whole, please see their respective pages.
 
 ## Getting Started
 
